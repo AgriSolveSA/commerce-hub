@@ -519,6 +519,55 @@
           Shipping cost depends on PUDO size tier. We’ll confirm the correct size based on your order.
         </p>
       </div>
+
+      <!-- SHIPPING CALCULATOR -->
+      <div class="card" style="padding:18px; margin-top:14px;" id="shipping-calculator">
+        <h3 style="margin:0 0 8px;">Shipping calculator (estimate)</h3>
+        <p class="fine" style="margin:0 0 12px;">
+          A kit is approximately <b>19cm × 19cm × 10cm</b>. A single kit is quoted as a <b>Medium PUDO locker</b>.
+          If you order multiple kits, we can ship in one larger box so you may save on shipping per kit.
+        </p>
+
+        <div class="grid" style="gap:12px;">
+          <div class="card" style="grid-column:span 6; box-shadow:none; background:#f8fbff;">
+            <label for="shipRoute"><b>PUDO route</b></label>
+            <select id="shipRoute" style="margin-top:6px;">
+              <option value="locker_to_locker" selected>Locker to Locker (recommended)</option>
+              <option value="locker_to_door">Locker to Door</option>
+              <option value="locker_to_kiosk">Locker to Kiosk</option>
+              <option value="kiosk_to_door">Kiosk to Door</option>
+            </select>
+
+            <label for="shipKitCount" style="margin-top:12px; display:block;"><b>How many kits?</b></label>
+            <input id="shipKitCount" type="number" min="1" step="1" value="1" inputmode="numeric" />
+
+            <p class="fine" style="margin:10px 0 0;">
+              Estimate is for kits. Add-ons may change final box size. Final shipping is confirmed by email.
+            </p>
+          </div>
+
+          <div class="card" style="grid-column:span 6; box-shadow:none; background:#fff;">
+            <div class="summaryRow">
+              <span>Estimated size tier</span>
+              <span id="shipTierLabel"><b>Medium (M)</b></span>
+            </div>
+            <div class="summaryRow" style="margin-top:8px;">
+              <span>Estimated shipping</span>
+              <span id="shipPriceLabel"><b>R69</b></span>
+            </div>
+            <div class="summaryRow" style="margin-top:8px;">
+              <span>Route</span>
+              <span id="shipRouteLabel">Locker to Locker</span>
+            </div>
+
+            <div class="card" style="margin-top:12px; padding:10px; background:#f8fbff; box-shadow:none;">
+              <p class="fine" id="shipCalcNote" style="margin:0;">
+                1 kit → Medium (M) estimate.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- TRUST -->
@@ -564,7 +613,7 @@
       <div class="faq">
         <details>
           <summary>How much is shipping?</summary>
-          <p>Shipping is paid by the customer (PUDO locker-to-locker). Price depends on the PUDO size tier.</p>
+          <p>Shipping is paid by the customer (PUDO locker-to-locker). A single kit is usually quoted as Medium (M). Multiple kits may be packed together into one larger box to save on shipping per kit. Final shipping is confirmed by email quote.</p>
         </details>
 
         <details>
@@ -639,9 +688,19 @@
         <textarea id="message" name="message" placeholder="Quantity, suburb/city, add-ons, questions, etc." required></textarea>
 
         <input type="hidden" id="cart_json" name="cart_json" value="" />
+        <input type="hidden" id="shipping_estimate" name="shipping_estimate" value="" />
+        <input type="hidden" id="shipping_tier" name="shipping_tier" value="" />
+        <input type="hidden" id="shipping_route" name="shipping_route" value="" />
         <input type="hidden" name="request_type" value="quote_request" />
         <input type="hidden" name="payment_method" value="EFT" />
         <input type="hidden" name="_subject" value="New Cub Club quote request (EFT)" />
+
+        <div class="card" style="margin-top:10px; padding:10px; background:#f8fbff; border:1px solid #dbeafe;">
+          <p style="margin:0; font-weight:700;">Estimated shipping (PUDO)</p>
+          <p class="fine" id="checkoutShippingSummary" style="margin:6px 0 0;">
+            Select your shipping option in the Delivery section to see an estimate. Final shipping is confirmed by email.
+          </p>
+        </div>
 
         <div class="row" style="margin-top:12px;">
           <button class="btn primary" type="submit">Email me my quote (EFT)</button>
@@ -703,7 +762,11 @@
           <span>Subtotal</span>
           <span id="cartSubtotal">R0</span>
         </div>
-        <div class="fine">Shipping: PUDO (paid by customer)</div>
+        <div class="summaryRow">
+          <span>Est. Shipping (PUDO)</span>
+          <span id="cartShippingEstimate">To be confirmed</span>
+        </div>
+        <div class="fine" id="cartShippingNote">Final shipping is confirmed by email quote based on packed box size.</div>
       </div>
 
       <div class="drawerActions">
@@ -729,5 +792,142 @@
   <script src="assets/js/toast.js" defer></script>
   <script src="assets/js/wa.js" defer></script>
   <script src="assets/js/app.js" defer></script>
+
+  <!-- Shipping calculator (independent, safe) -->
+  <script>
+    (function () {
+      const routeSelect = document.getElementById('shipRoute');
+      const kitCountInput = document.getElementById('shipKitCount');
+
+      const shipTierLabel = document.getElementById('shipTierLabel');
+      const shipPriceLabel = document.getElementById('shipPriceLabel');
+      const shipRouteLabel = document.getElementById('shipRouteLabel');
+      const shipCalcNote = document.getElementById('shipCalcNote');
+
+      const hiddenEstimate = document.getElementById('shipping_estimate');
+      const hiddenTier = document.getElementById('shipping_tier');
+      const hiddenRoute = document.getElementById('shipping_route');
+
+      const checkoutShippingSummary = document.getElementById('checkoutShippingSummary');
+      const cartShippingEstimate = document.getElementById('cartShippingEstimate');
+      const cartShippingNote = document.getElementById('cartShippingNote');
+
+      if (!routeSelect || !kitCountInput) return;
+
+      const ROUTE_LABELS = {
+        locker_to_locker: 'Locker to Locker',
+        locker_to_door: 'Locker to Door',
+        locker_to_kiosk: 'Locker to Kiosk',
+        kiosk_to_door: 'Kiosk to Door'
+      };
+
+      const ROUTE_CODES = {
+        locker_to_locker: 'l2l',
+        locker_to_door: 'l2d',
+        locker_to_kiosk: 'l2k',
+        kiosk_to_door: 'k2d'
+      };
+
+      // PUDO price table from your provided rate image (estimate helper only)
+      const PRICE_TABLE = {
+        locker_to_locker: { XS: 49, S: 59, M: 69, L: 89, XL: 119 },
+        locker_to_door:   { XS: 69, S: 79, M: 109, L: 156, XL: 209 },
+        locker_to_kiosk:  { XS: 59, S: 69, M: 79, L: 109, XL: 139 },
+        kiosk_to_door:    { XS: 83, S: 95, M: 125, L: 190, XL: 250 }
+      };
+
+      // Business rule:
+      // 1 kit = Medium. Multi-kit orders can be combined in bigger boxes.
+      function estimateTierForKitCount(qty) {
+        if (qty <= 1) return { tier: 'M', label: 'Medium (M)', note: '1 kit → Medium (M) estimate.' };
+        if (qty <= 3) return { tier: 'L', label: 'Large (L)', note: '2–3 kits → estimated Large (L) box (combined shipping savings vs separate parcels).' };
+        if (qty <= 6) return { tier: 'XL', label: 'Extra Large (XL)', note: '4–6 kits → estimated XL box.' };
+        return { tier: 'XL', label: 'Extra Large (XL) / Custom', note: 'Large multi-kit order: final box size and shipping confirmed by email quote.' };
+      }
+
+      function formatRand(value) {
+        return Number.isFinite(value) ? `R${value}` : 'To be confirmed';
+      }
+
+      function updateShippingCalculator() {
+        const route = routeSelect.value || 'locker_to_locker';
+        const qty = Math.max(1, parseInt(kitCountInput.value || '1', 10) || 1);
+
+        const tierInfo = estimateTierForKitCount(qty);
+        const price = PRICE_TABLE[route] && PRICE_TABLE[route][tierInfo.tier];
+
+        if (shipTierLabel) shipTierLabel.textContent = tierInfo.label;
+        if (shipPriceLabel) shipPriceLabel.textContent = formatRand(price);
+        if (shipRouteLabel) shipRouteLabel.textContent = ROUTE_LABELS[route] || 'Locker to Locker';
+        if (shipCalcNote) shipCalcNote.textContent = tierInfo.note;
+
+        const estimateText = `${formatRand(price)} (${tierInfo.label}, ${ROUTE_LABELS[route] || 'Locker to Locker'})`;
+
+        // Keep hidden fields compatible with app.js conventions (best effort fallback)
+        if (hiddenEstimate) hiddenEstimate.value = Number.isFinite(price) ? `R${price}` : '';
+        if (hiddenTier) hiddenTier.value = tierInfo.tier || '';
+        if (hiddenRoute) hiddenRoute.value = ROUTE_CODES[route] || 'l2l';
+
+        if (checkoutShippingSummary) {
+          checkoutShippingSummary.textContent =
+            `Estimated shipping: ${estimateText}. Final shipping is confirmed by email quote based on packed box size and add-ons.`;
+        }
+
+        if (cartShippingEstimate) {
+          cartShippingEstimate.textContent = formatRand(price);
+        }
+
+        if (cartShippingNote) {
+          cartShippingNote.textContent =
+            `${tierInfo.label} • ${ROUTE_LABELS[route] || 'Locker to Locker'}. Final shipping is confirmed by email quote based on packed box size.`;
+        }
+      }
+
+      routeSelect.addEventListener('change', updateShippingCalculator);
+      kitCountInput.addEventListener('input', updateShippingCalculator);
+
+      // Try to estimate kit count from local cart (non-breaking, best effort)
+      try {
+        const possibleKeys = ['cubclub_cart', 'cart', 'cub_club_cart'];
+        let raw = null;
+        for (const key of possibleKeys) {
+          const v = localStorage.getItem(key);
+          if (v) { raw = v; break; }
+        }
+
+        if (raw) {
+          const cart = JSON.parse(raw);
+
+          // Support array-style carts AND object carts { items: { ... } }
+          const items = Array.isArray(cart)
+            ? cart
+            : (cart && cart.items && typeof cart.items === 'object')
+              ? Object.values(cart.items)
+              : [];
+
+          if (items.length) {
+            let kits = 0;
+
+            for (const item of items) {
+              const sku = String(item.sku || item.id || '').toLowerCase();
+              const qty = Math.max(1, Number(item.qty || item.quantity || 1) || 1);
+
+              // Requested rule:
+              // - bundle counts as 3
+              // - every other selected item counts as 1
+              if (sku === 'bundle') kits += 3 * qty;
+              else kits += qty;
+            }
+
+            if (kits > 0) kitCountInput.value = String(kits);
+          }
+        }
+      } catch (e) {
+        // ignore — shipping calculator should never break cart/app
+      }
+
+      updateShippingCalculator();
+    })();
+  </script>
 </body>
 </html>

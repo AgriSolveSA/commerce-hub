@@ -10,7 +10,7 @@ export default {
       });
     }
 
-    // Simple health check
+    // Health check
     if (url.pathname === "/health") {
       return json({ ok: true, service: "quote-api" }, 200, request, env);
     }
@@ -20,10 +20,19 @@ export default {
       return json({ ok: false, error: "Not found" }, 404, request, env);
     }
 
-    // Optional origin restriction
+    // Origin restriction (CORS + anti-abuse)
     const origin = request.headers.get("Origin") || "";
-    if (!isOriginAllowed(origin, env.ALLOWED_ORIGIN)) {
-      return json({ ok: false, error: "Origin not allowed" }, 403, request, env);
+    if (!isOriginAllowed(origin, env)) {
+      return json(
+        {
+          ok: false,
+          error: "Origin not allowed",
+          origin: origin || null
+        },
+        403,
+        request,
+        env
+      );
     }
 
     let body;
@@ -33,7 +42,7 @@ export default {
       return json({ ok: false, error: "Invalid JSON body" }, 400, request, env);
     }
 
-    // Honeypot anti-bot field (optional: add hidden "website" field in form)
+    // Honeypot anti-bot field (if provided)
     if (typeof body.website === "string" && body.website.trim() !== "") {
       return json({ ok: true, skipped: true }, 200, request, env);
     }
@@ -63,8 +72,8 @@ export default {
       requestId,
       tags: [
         { name: "store", value: payload.storeSlug },
-        { name: "type", value: "quote_request" },
-      ],
+        { name: "type", value: "quote_request" }
+      ]
     });
 
     if (!storeEmailResult.ok) {
@@ -72,7 +81,7 @@ export default {
         {
           ok: false,
           error: "Failed to send quote email",
-          provider: storeEmailResult.providerError,
+          provider: storeEmailResult.providerError
         },
         502,
         request,
@@ -113,8 +122,8 @@ If you need to update your request, reply to this email.
         requestId: `${requestId}-customer`,
         tags: [
           { name: "store", value: payload.storeSlug },
-          { name: "type", value: "quote_confirmation" },
-        ],
+          { name: "type", value: "quote_confirmation" }
+        ]
       });
 
       if (customerResult.ok) customerEmailId = customerResult.emailId || null;
@@ -126,37 +135,63 @@ If you need to update your request, reply to this email.
         message: "Quote request sent",
         reference: requestId,
         emailId: storeEmailResult.emailId || null,
-        customerEmailId,
+        customerEmailId
       },
       200,
       request,
       env
     );
-  },
+  }
 };
 
 // ---------- Helpers ----------
 
 function normalizePayload(body) {
   const items = Array.isArray(body.items) ? body.items : [];
+
   return {
     storeSlug: String(body.storeSlug || body.store_slug || "").trim().toLowerCase(),
     name: String(body.name || body.fullName || "").trim(),
     email: String(body.email || "").trim().toLowerCase(),
     phone: String(body.phone || body.whatsapp || "").trim(),
-    city: String(body.city || "").trim(),
+
+    // Delivery/location fields (support multiple frontend names)
+    city: String(body.city || body.town || "").trim(),
+    pudoLocker: String(body.pudo || body.pudoLocker || body.area || "").trim(),
+
+    // Notes/message fields
     notes: String(body.notes || body.message || "").trim(),
+
+    // Cart/items
     items: items.map((x) => ({
       name: String(x?.name || x?.title || x?.sku || "Item").trim(),
       qty: Number(x?.qty || x?.quantity || 1) || 1,
-      price: x?.price != null ? Number(x.price) : null,
+      price: x?.price != null ? Number(x.price) : null
     })),
-    sourceUrl: String(body.sourceUrl || body.pageUrl || body.url || "").trim(),
+
+    // Shipping estimate fields (new, optional)
+    shippingEstimate: String(body.shippingEstimate || body.shipping_estimate || "").trim(),
+    shippingTier: String(body.shippingTier || body.shipping_tier || "").trim(),
+    shippingRoute: String(body.shippingRoute || body.shipping_route || "").trim(),
+
+    // Raw cart summary/json (optional, useful for debugging)
+    cartJson:
+      typeof body.cart_json === "string"
+        ? body.cart_json
+        : typeof body.cartJson === "string"
+          ? body.cartJson
+          : "",
+
+    sourceUrl: String(body.sourceUrl || body.pageUrl || body.url || "").trim()
   };
 }
 
 function validatePayload(p, env) {
   const errs = [];
+
+  if (!env.RESEND_API_KEY) errs.push("Server misconfiguration: RESEND_API_KEY missing");
+  if (!env.QUOTE_TO_EMAIL) errs.push("Server misconfiguration: QUOTE_TO_EMAIL missing");
+  if (!env.RESEND_FROM) errs.push("Server misconfiguration: RESEND_FROM missing");
 
   if (!p.storeSlug) errs.push("storeSlug is required");
   if (env.STORE_SLUG && p.storeSlug !== String(env.STORE_SLUG).toLowerCase()) {
@@ -173,6 +208,7 @@ function validatePayload(p, env) {
   if (p.name.length > 120) errs.push("name too long");
   if (p.notes.length > 4000) errs.push("notes too long");
   if (p.items.length > 50) errs.push("too many items");
+  if (p.cartJson.length > 50000) errs.push("cart_json too large");
 
   return errs;
 }
@@ -186,29 +222,31 @@ async function sendViaResend({
   html,
   replyTo,
   requestId,
-  tags = [],
+  tags = []
 }) {
+  if (!apiKey) {
+    return { ok: false, providerError: { message: "Missing RESEND_API_KEY" } };
+  }
+
   const payload = {
     from,
     to,
     subject,
     text,
     html,
-    tags,
+    tags
   };
 
-  if (replyTo) {
-    payload.reply_to = replyTo;
-  }
+  if (replyTo) payload.reply_to = replyTo;
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${apiKey}`,
-      "Idempotency-Key": requestId,
+      "Idempotency-Key": requestId
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
 
   const data = await safeJson(res);
@@ -216,13 +254,13 @@ async function sendViaResend({
   if (!res.ok) {
     return {
       ok: false,
-      providerError: data || { status: res.status, statusText: res.statusText },
+      providerError: data || { status: res.status, statusText: res.statusText }
     };
   }
 
   return {
     ok: true,
-    emailId: data?.id || null,
+    emailId: data?.id || null
   };
 }
 
@@ -236,6 +274,10 @@ function buildTextEmail(p, requestId, request) {
   if (p.email) lines.push(`Email: ${p.email}`);
   if (p.phone) lines.push(`Phone: ${p.phone}`);
   if (p.city) lines.push(`City: ${p.city}`);
+  if (p.pudoLocker) lines.push(`PUDO locker/area: ${p.pudoLocker}`);
+  if (p.shippingEstimate) lines.push(`Estimated shipping: ${p.shippingEstimate}`);
+  if (p.shippingTier) lines.push(`Shipping tier: ${p.shippingTier}`);
+  if (p.shippingRoute) lines.push(`Shipping route: ${p.shippingRoute}`);
   if (p.sourceUrl) lines.push(`Page: ${p.sourceUrl}`);
   lines.push(`IP: ${request.headers.get("CF-Connecting-IP") || "unknown"}`);
   lines.push(``);
@@ -255,11 +297,18 @@ function buildTextEmail(p, requestId, request) {
     lines.push(``);
   }
 
+  if (p.cartJson) {
+    lines.push(`Cart JSON:`);
+    lines.push(p.cartJson);
+    lines.push(``);
+  }
+
   return lines.join("\n");
 }
 
 function buildHtmlEmail(p, requestId, request) {
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+
   const itemsHtml = p.items.length
     ? `<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
         <thead>
@@ -276,6 +325,13 @@ function buildHtmlEmail(p, requestId, request) {
       </table>`
     : "<p><em>No item list provided</em></p>";
 
+  const shippingBits = [
+    p.pudoLocker ? `<strong>PUDO locker/area:</strong> ${escapeHtml(p.pudoLocker)}<br/>` : "",
+    p.shippingEstimate ? `<strong>Estimated shipping:</strong> ${escapeHtml(p.shippingEstimate)}<br/>` : "",
+    p.shippingTier ? `<strong>Shipping tier:</strong> ${escapeHtml(p.shippingTier)}<br/>` : "",
+    p.shippingRoute ? `<strong>Shipping route:</strong> ${escapeHtml(p.shippingRoute)}<br/>` : ""
+  ].join("");
+
   return `
   <div style="font-family:Arial,sans-serif;line-height:1.45;color:#111">
     <h2>New Quote Request</h2>
@@ -288,6 +344,7 @@ function buildHtmlEmail(p, requestId, request) {
       ${p.email ? `<strong>Email:</strong> ${escapeHtml(p.email)}<br/>` : ""}
       ${p.phone ? `<strong>Phone:</strong> ${escapeHtml(p.phone)}<br/>` : ""}
       ${p.city ? `<strong>City:</strong> ${escapeHtml(p.city)}<br/>` : ""}
+      ${shippingBits}
       ${p.sourceUrl ? `<strong>Page:</strong> ${escapeHtml(p.sourceUrl)}<br/>` : ""}
       <strong>IP:</strong> ${escapeHtml(ip)}
     </p>
@@ -296,6 +353,7 @@ function buildHtmlEmail(p, requestId, request) {
     ${itemsHtml}
 
     ${p.notes ? `<h3>Notes</h3><pre style="white-space:pre-wrap;font-family:Arial,sans-serif">${escapeHtml(p.notes)}</pre>` : ""}
+    ${p.cartJson ? `<h3>Cart JSON</h3><pre style="white-space:pre-wrap;font-family:Arial,sans-serif">${escapeHtml(p.cartJson)}</pre>` : ""}
   </div>`;
 }
 
@@ -316,23 +374,66 @@ function escapeHtml(str) {
     .replaceAll("'", "&#39;");
 }
 
-function isOriginAllowed(origin, allowedOrigin) {
-  if (!allowedOrigin || allowedOrigin === "*") return true;
-  if (!origin) return true; // allow curl/server-to-server tests
-  return origin === allowedOrigin;
+function parseAllowedOrigins(env) {
+  const raw =
+    String(env.ALLOWED_ORIGINS || "").trim() ||
+    String(env.ALLOWED_ORIGIN || "").trim(); // backward compatibility
+
+  if (!raw || raw === "*") return { any: true, origins: [] };
+
+  const origins = raw
+    .split(",")
+    .map((x) => normalizeOrigin(x))
+    .filter(Boolean);
+
+  return { any: false, origins };
+}
+
+function normalizeOrigin(value) {
+  const v = String(value || "").trim();
+  if (!v) return "";
+  // Remove trailing slash so exact comparisons don't fail on config formatting
+  return v.endsWith("/") ? v.slice(0, -1) : v;
+}
+
+function isOriginAllowed(origin, env) {
+  const normalizedOrigin = normalizeOrigin(origin);
+
+  // Allow curl / server-to-server (no Origin header)
+  if (!normalizedOrigin) return true;
+
+  // local file testing often sends Origin: null
+  if (normalizedOrigin === "null") {
+    return String(env.ALLOW_NULL_ORIGIN || "false").toLowerCase() === "true";
+  }
+
+  const { any, origins } = parseAllowedOrigins(env);
+  if (any) return true;
+
+  return origins.includes(normalizedOrigin);
 }
 
 function corsHeaders(request, env) {
   const origin = request.headers.get("Origin") || "";
-  const allowed = isOriginAllowed(origin, env.ALLOWED_ORIGIN);
-  const allowOrigin = allowed ? (origin || env.ALLOWED_ORIGIN || "*") : "null";
+  const normalizedOrigin = normalizeOrigin(origin);
+  const allowed = isOriginAllowed(origin, env);
+
+  let allowOrigin = "null";
+  if (allowed) {
+    if (normalizedOrigin) {
+      allowOrigin = normalizedOrigin;
+    } else {
+      const parsed = parseAllowedOrigins(env);
+      allowOrigin = parsed.any ? "*" : (parsed.origins[0] || "*");
+    }
+  }
 
   return {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Max-Age": "86400",
-    "Vary": "Origin",
+    "Vary": "Origin"
   };
 }
 
@@ -341,8 +442,8 @@ function json(obj, status, request, env) {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      ...corsHeaders(request, env),
-    },
+      ...corsHeaders(request, env)
+    }
   });
 }
 
