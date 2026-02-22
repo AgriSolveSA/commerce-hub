@@ -5,7 +5,7 @@
    ============================================================ */
 
 /* -----------------------------
-   Design tokens
+   Design tokens (single source of truth)
 ------------------------------ */
 :root{
   --font: Manrope, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -41,6 +41,16 @@
 
   /* Touch */
   --tap: 44px;
+
+  /* Utility spacing tokens */
+  --s-2: 6px;
+  --s-3: 10px;
+  --s-35: 12px;
+  --s-4: 14px;
+  --s-5: 18px;
+  --s-6: 22px;
+  --s-7: 28px;
+  --s-8: 36px;
 }
 
 /* -----------------------------
@@ -74,6 +84,10 @@ img{ max-width:100%; display:block; }
 
 /* Better tap highlights */
 button, a{ -webkit-tap-highlight-color: transparent; }
+
+/* Prevent long text/buttons from causing horizontal scroll */
+body{ overflow-x: hidden; }
+.btn, .pill, .badge, .tag{ max-width: 100%; }
 
 /* -----------------------------
    Top announcement bar (sticky)
@@ -126,7 +140,7 @@ header{
   padding: 18px 0 6px;
 }
 
-/* World-class sticky behavior: nav sits under bar via CSS var */
+/* nav sits under bar via CSS var */
 .nav{
   position: sticky;
   top: var(--nav-top);
@@ -145,6 +159,7 @@ header{
   justify-content:space-between;
   gap: 10px;
   padding: 10px 12px;
+  min-width: 0; /* prevents overflow */
 }
 
 .brand{
@@ -154,6 +169,7 @@ header{
   font-weight: 900;
   letter-spacing: -0.3px;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .logo{
@@ -193,6 +209,7 @@ header{
   gap: 8px;
   align-items:center;
   flex: 0 0 auto;
+  min-width: 0;
 }
 
 /* Buttons */
@@ -403,6 +420,7 @@ section{ padding: 26px 0; }
   justify-content:space-between;
   gap: 12px;
   margin-bottom: 12px;
+  min-width: 0;
 }
 
 h2{
@@ -424,7 +442,7 @@ h2{
 .grid{
   display:grid;
   gap: 14px;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   margin-top: 12px;
 }
 
@@ -440,6 +458,7 @@ h2{
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   position: relative;
   overflow: hidden;
+  min-width: 0;
 }
 .card:hover{
   transform: translateY(-2px);
@@ -500,6 +519,7 @@ h2{
   line-height: 1.4;
 }
 
+/* Check mark icon */
 .check{
   width: 18px;
   height: 18px;
@@ -510,6 +530,8 @@ h2{
   place-items:center;
   flex: 0 0 auto;
   margin-top: 1px;
+  font-weight: 900;
+  color: var(--brand);
 }
 
 .priceRow{
@@ -540,12 +562,52 @@ h2{
 }
 
 /* -----------------------------
+   Bundle layout (mobile-safe)
+------------------------------ */
+.bundleHead h3{ margin: 0 0 6px; }
+
+.bundleGrid{
+  display:grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.bundlePane{
+  border: 1px solid rgba(15,23,42,.10);
+  border-radius: var(--r-lg);
+  background: rgba(255,255,255,.70);
+  padding: 14px;
+  box-shadow: none;
+  min-width: 0;
+}
+
+.bundleBuy{
+  display:grid;
+  gap: 10px;
+  align-content:start;
+}
+
+.bundleActions{
+  display:grid;
+  gap: 10px;
+}
+
+/* CRITICAL: prevents the “button becomes a bubble” bug */
+.bundleActions .btn{ width: 100%; }
+.bundleActions a.btn{ width: 100%; }
+
+.bundlePrice{ margin: 0; }
+.bundleSave{ margin: 0; }
+.bundleNote{ margin: 0; }
+
+/* -----------------------------
    How it works / trust rows
 ------------------------------ */
 .triple{
   display:grid;
   gap: 14px;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   margin-top: 12px;
 }
 
@@ -558,6 +620,7 @@ h2{
   -webkit-backdrop-filter: blur(10px);
   box-shadow: var(--shadow2);
   padding: 16px;
+  min-width: 0;
 }
 .infoCard h3{
   margin:0 0 8px;
@@ -585,6 +648,7 @@ h2{
   border-radius: var(--r-md);
   border: 1px solid rgba(15,23,42,.08);
   background: rgba(255,255,255,.70);
+  min-width: 0;
 }
 .stepIcon{
   width: 40px;
@@ -688,6 +752,7 @@ textarea{ min-height: 120px; resize: vertical; }
   gap: 10px;
   flex-wrap: wrap;
   align-items:center;
+  min-width: 0;
 }
 
 /* -----------------------------
@@ -885,6 +950,9 @@ footer{
   font-size: 13px;
 }
 
+/* Drawer fine padding helper (replaces inline) */
+.drawerFinePad{ padding: 0 14px 14px; }
+
 /* Toast */
 .toast{
   position: fixed;
@@ -909,11 +977,49 @@ footer{
 }
 
 /* ============================================================
-   WORLD-CLASS MOBILE POLISH (the part your screenshots needed)
-   - Fix sticky overlap cleanly
-   - Reduce bar height
-   - Remove double-header feeling
-   - Tighten spacing, keep premium look
+   Accessibility: Skip link
+   ============================================================ */
+.skip-link{
+  position:absolute;
+  left:-9999px;
+  top:8px;
+  z-index:9999;
+  background: var(--brand);
+  color:#fff;
+  padding:10px 12px;
+  border-radius:999px;
+  text-decoration:none;
+  font-weight:900;
+}
+.skip-link:focus{ left:12px; }
+
+/* ============================================================
+   Utilities (minimal, predictable)
+   ============================================================ */
+.gap-10{ gap: 10px !important; }
+.no-underline{ text-decoration:none !important; border-bottom: none !important; }
+.m0{ margin: 0 !important; }
+.mb-0{ margin-bottom: 0 !important; }
+.mb-2{ margin-bottom: var(--s-2) !important; }
+.fw-900{ font-weight: 900 !important; }
+
+.mt-2{ margin-top: var(--s-2) !important; }
+.mt-3{ margin-top: var(--s-3) !important; }
+.mt-35{ margin-top: var(--s-35) !important; }
+.mt-4{ margin-top: var(--s-4) !important; }
+.mb-4{ margin-bottom: var(--s-4) !important; }
+.pad-6{ padding: 18px !important; }
+
+.noticeCard{
+  margin-bottom: var(--s-4);
+  padding: 12px;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+  border-radius: var(--r-lg);
+}
+
+/* ============================================================
+   WORLD-CLASS MOBILE POLISH
    ============================================================ */
 
 /* Tablet + down */
@@ -923,6 +1029,7 @@ footer{
   .heroGrid{ grid-template-columns: 1fr; }
   .card{ grid-column: span 12; }
   .infoCard{ grid-column: span 12; }
+
   .links{ display:none; }
   .footGrid{ grid-template-columns: 1fr; }
   .tinyLinks{ justify-content:flex-start; }
@@ -930,19 +1037,18 @@ footer{
 
   /* Nav feels less “pill”, more premium */
   .nav{ border-radius: 18px; }
+
+  /* Bundle stacks */
+  .bundleGrid{ grid-template-columns: 1fr; }
 }
 
-/* Phone */
+/* Phones */
 @media (max-width: 560px){
-  :root{
-    --bar-h: 44px;
-  }
-
   /* Make bar compact + prevent multi-line chaos */
   .bar{ padding: 8px 0; }
   .bar .inner{ font-size: 12px; gap: 10px; }
 
-  /* Kill the long sentence on mobile; keep CTA clean */
+  /* Keep CTA clean */
   .bar .inner > .row span:last-child{ display:none; }
 
   .bar .pill{
@@ -950,7 +1056,7 @@ footer{
     font-size: 11px;
   }
 
-  /* Make nav tighter and consistent */
+  /* Make nav tighter */
   .nav{ margin-top: 10px; }
   .nav .inner{ padding: 8px 10px; }
 
@@ -976,8 +1082,33 @@ footer{
   .heroCard{ padding: 18px; }
   h1{ letter-spacing: -0.7px; }
 
-  /* Section spacing slightly tighter on mobile */
+  /* Sections tighter */
   section{ padding: 22px 0; }
+}
+
+/* Tiny phones: FIX nav CTA overflow / "Best Deal" giant pill */
+@media (max-width: 520px){
+  .nav .inner{
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .cta{
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .cta .btn{
+    flex: 1 1 0;
+    width: auto;
+    padding: 10px 10px;
+    font-size: 13px;
+    min-height: 42px;
+  }
+
+  /* Slight emphasis for cart so it feels primary but still fits */
+  .cta #cartBtn{ flex: 1.15 1 0; }
 }
 
 /* Reduce motion for accessibility */
@@ -985,106 +1116,434 @@ footer{
   *{ transition:none !important; scroll-behavior:auto !important; }
 }
 
+
 /* ============================================================
-   Separation-of-concerns patch (no inline styles)
-   - Skip link moved from HTML into CSS
-   - Bundle layout (grid + mobile stack)
-   - Small utility classes for spacing/layout
+   Cub Club — INSANE COLOR UPGRADE (override-only)
+   Keeps class names and layout intact
+   Paste at END of styles.css
    ============================================================ */
 
-/* Skip link (accessibility) */
-.skip-link{
-  position:absolute;
-  left:-9999px;
-  top:8px;
-  z-index:9999;
-  background: var(--brand);
-  color:#fff;
-  padding:10px 12px;
-  border-radius:999px;
-  text-decoration:none;
-  font-weight:900;
+/* ---------- Color tokens upgrade ---------- */
+:root{
+  /* Base */
+  --bg: #f6f9ff;
+  --text: #071225;
+  --muted: #5a6880;
+
+  /* Brand spectrum (trust + premium + playful) */
+  --brand: #1d4ed8;   /* deep royal blue */
+  --brand2:#7c3aed;   /* premium violet */
+  --accent:#06b6d4;   /* vivid cyan */
+
+  /* Borders / glass */
+  --border: rgba(37, 99, 235, .16);
+  --border2: rgba(124, 58, 237, .10);
+
+  --card: rgba(255,255,255,.78);
+
+  /* Keep sizes same, tint only */
+  --shadow: 0 18px 50px rgba(30, 64, 175, .13);
+  --shadow2: 0 10px 30px rgba(76, 29, 149, .10);
+
+  --ring: 0 0 0 4px rgba(124,58,237,.18);
 }
-.skip-link:focus{ left:12px; }
 
-/* Bundle */
-.bundleHead h3{ margin: 0 0 6px; }
+/* ---------- Global mood / background ---------- */
+body{
+  background:
+    radial-gradient(900px 500px at 8% -10%, rgba(29,78,216,.17), transparent 58%),
+    radial-gradient(900px 500px at 92% -10%, rgba(124,58,237,.14), transparent 58%),
+    radial-gradient(700px 420px at 18% 28%, rgba(6,182,212,.09), transparent 60%),
+    radial-gradient(1000px 600px at 45% 120%, rgba(59,130,246,.10), transparent 55%),
+    linear-gradient(180deg, #f8fbff 0%, #f4f7ff 48%, #f7fbff 100%);
+  color: var(--text);
+}
 
-.bundleGrid{
-  display:grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 14px;
-  margin-top: 12px;
+::selection{
+  background: rgba(124,58,237,.20);
+  color: #061021;
+}
+
+/* ---------- Announcement bar ---------- */
+.bar{
+  background:
+    linear-gradient(90deg, #0f3fb8 0%, #1d4ed8 28%, #2563eb 54%, #7c3aed 100%);
+  border-bottom-color: rgba(255,255,255,.18);
+  box-shadow: 0 10px 30px rgba(37,99,235,.16);
+}
+
+.bar a{
+  border-bottom-color: rgba(255,255,255,.8);
+}
+
+.bar .pill{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+  border-color: rgba(255,255,255,.26);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16);
+}
+
+/* ---------- Nav / header glass ---------- */
+.nav{
+  border-color: rgba(37,99,235,.18);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.78));
+  box-shadow:
+    0 10px 30px rgba(37,99,235,.08),
+    0 6px 18px rgba(124,58,237,.05);
+}
+
+.logo{
+  background:
+    linear-gradient(135deg, #1d4ed8 0%, #2563eb 34%, #06b6d4 68%, #7c3aed 100%);
+  box-shadow: 0 12px 25px rgba(37,99,235,.24);
+}
+
+.links a{
+  color: #0b1324;
+}
+.links a:hover{
+  border-color: rgba(124,58,237,.24);
+  background: linear-gradient(180deg, rgba(124,58,237,.06), rgba(37,99,235,.04));
+}
+
+/* ---------- Buttons ---------- */
+.btn.primary{
+  color:#fff;
+  background:
+    linear-gradient(135deg, #1d4ed8 0%, #2563eb 38%, #06b6d4 74%, #7c3aed 100%);
+  box-shadow: 0 14px 35px rgba(37,99,235,.24);
+}
+
+.btn.primary::after{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,.08) 42%, transparent 65%);
+}
+
+.btn.primary:hover{
+  box-shadow: 0 18px 45px rgba(37,99,235,.28);
+  filter: saturate(1.08) brightness(1.01);
+}
+
+.btn.secondary{
+  color:#0c1426;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.88), rgba(248,250,255,.76));
+  border-color: rgba(37,99,235,.16);
+}
+
+.btn.secondary:hover{
+  border-color: rgba(124,58,237,.24);
+  background:
+    linear-gradient(180deg, rgba(124,58,237,.05), rgba(37,99,235,.04));
+  box-shadow: 0 12px 28px rgba(37,99,235,.10);
+}
+
+.btn:focus{
+  box-shadow: var(--ring);
+}
+
+/* Cart count */
+.count{
+  background: linear-gradient(180deg, rgba(37,99,235,.14), rgba(124,58,237,.10));
+  border-color: rgba(124,58,237,.18);
+  color: #0b1530;
+}
+
+/* ---------- Hero ---------- */
+.heroCard{
+  border-color: rgba(37,99,235,.18);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.76));
+  box-shadow:
+    0 18px 50px rgba(37,99,235,.10),
+    0 8px 20px rgba(124,58,237,.06);
+}
+
+.heroCard:before{
+  background:
+    radial-gradient(650px 280px at 8% 2%, rgba(37,99,235,.22), transparent 65%),
+    radial-gradient(650px 280px at 96% 10%, rgba(124,58,237,.18), transparent 65%),
+    radial-gradient(520px 240px at 55% 0%, rgba(6,182,212,.12), transparent 68%);
+}
+
+.heroCard::after{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.72),
+    inset 0 0 0 1px rgba(255,255,255,.28);
+}
+
+.sub,
+.miniText,
+.fine,
+.hint,
+.mini{
+  color: var(--muted);
+}
+
+.badge{
+  border-color: rgba(124,58,237,.16);
+  background:
+    linear-gradient(180deg, rgba(37,99,235,.07), rgba(124,58,237,.06));
+  color:#0c1426;
+}
+.badge svg{ opacity:.9; }
+
+.miniCard{
+  border-color: rgba(37,99,235,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.76));
+  box-shadow:
+    0 10px 30px rgba(37,99,235,.07),
+    0 6px 18px rgba(124,58,237,.05);
+}
+
+/* ---------- Product cards / grids ---------- */
+.card{
+  border-color: rgba(37,99,235,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.78));
+  box-shadow:
+    0 10px 30px rgba(37,99,235,.07),
+    0 6px 18px rgba(124,58,237,.04);
+}
+
+.card:hover{
+  border-color: rgba(124,58,237,.24);
+  box-shadow:
+    0 18px 50px rgba(37,99,235,.12),
+    0 10px 26px rgba(124,58,237,.08);
+}
+
+.tag{
+  border-color: rgba(6,182,212,.22);
+  background:
+    linear-gradient(180deg, rgba(6,182,212,.10), rgba(37,99,235,.06));
+  color:#0b1324;
+}
+
+.productImg{
+  border-color: rgba(37,99,235,.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.9), rgba(248,251,255,.75));
+}
+
+.check{
+  background: linear-gradient(180deg, rgba(37,99,235,.12), rgba(124,58,237,.08));
+  border-color: rgba(37,99,235,.20);
+  color: #1d4ed8;
+}
+
+.priceRow{
+  border-top-color: rgba(37,99,235,.10);
+}
+
+.price{
+  color: #1d4ed8;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+.bundleCard{
+  background:
+    radial-gradient(800px 260px at 12% 8%, rgba(37,99,235,.22), transparent 60%),
+    radial-gradient(800px 260px at 88% 18%, rgba(124,58,237,.18), transparent 60%),
+    radial-gradient(620px 220px at 45% 0%, rgba(6,182,212,.10), transparent 64%),
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.80));
 }
 
 .bundlePane{
-  border: 1px solid rgba(15,23,42,.10);
-  border-radius: var(--r-lg);
-  background: rgba(255,255,255,.70);
-  padding: 14px;
-  box-shadow: none;
+  border-color: rgba(37,99,235,.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.72));
 }
 
-.bundleBuy{
-  display:grid;
-  gap: 10px;
-  align-content:start;
+/* ---------- Info / trust / steps ---------- */
+.infoCard{
+  border-color: rgba(37,99,235,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.78));
+  box-shadow:
+    0 10px 30px rgba(37,99,235,.07),
+    0 6px 18px rgba(124,58,237,.05);
 }
 
-.bundleActions{
-  display:grid;
-  gap: 10px;
+.infoCard p{
+  color: var(--muted);
 }
 
-.bundlePrice{ margin: 0; }
-.bundleSave{ margin: 0; }
-.bundleNote{ margin: 0; }
-
-/* Check icon supports both inline SVG and the ✓ character */
-.check{
-  font-weight: 900;
-  color: var(--brand);
+.step{
+  border-color: rgba(37,99,235,.10);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.72));
 }
 
-/* Mobile: stack bundle panes */
-@media (max-width: 980px){
-  .bundleGrid{ grid-template-columns: 1fr; }
+.stepIcon{
+  background:
+    linear-gradient(180deg, rgba(37,99,235,.12), rgba(124,58,237,.10));
+  border-color: rgba(124,58,237,.18);
+  color: #1d4ed8;
 }
 
-/* Utilities (minimal, predictable) */
-.gap-10{ gap: 10px !important; }
-.no-underline{ text-decoration:none !important; border-bottom: none !important; }
-
-.m0{ margin: 0 !important; }
-.mb-0{ margin-bottom: 0 !important; }
-.fw-900{ font-weight: 900 !important; }
-
-/* Spacing scale used by the HTML cleanup */
-:root{
-  --s-2: 6px;
-  --s-3: 10px;
-  --s-35: 12px;
-  --s-4: 14px;
+/* ---------- FAQ ---------- */
+details{
+  border-color: rgba(37,99,235,.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.78));
+  box-shadow:
+    0 10px 30px rgba(37,99,235,.06),
+    0 6px 18px rgba(124,58,237,.04);
 }
 
-.mt-2{ margin-top: var(--s-2) !important; }
-.mt-3{ margin-top: var(--s-3) !important; }
-.mt-35{ margin-top: var(--s-35) !important; }
-.mt-4{ margin-top: var(--s-4) !important; }
+summary:after{
+  color: #1d4ed8;
+}
 
-.mb-4{ margin-bottom: var(--s-4) !important; }
+details p{
+  color: var(--muted);
+}
 
-/* Padding helper used for the delivery card */
-.pad-6{ padding: 18px !important; }
+/* ---------- Form ---------- */
+form{
+  border-color: rgba(37,99,235,.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.78));
+  box-shadow:
+    0 10px 30px rgba(37,99,235,.06),
+    0 6px 18px rgba(124,58,237,.04);
+}
 
-/* Notice card styling for the checkout explainer */
+label{
+  color:#0b1324;
+}
+
+input, textarea, select{
+  border-color: rgba(37,99,235,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.96), rgba(249,251,255,.90));
+  color: #0b1324;
+}
+
+input:focus, textarea:focus, select:focus{
+  border-color: rgba(124,58,237,.35);
+  box-shadow: 0 0 0 4px rgba(124,58,237,.14);
+}
+
+/* ---------- Footer ---------- */
+footer{
+  color: var(--muted);
+}
+
+.footGrid{
+  border-top-color: rgba(37,99,235,.10);
+}
+
+.tinyLinks a{
+  border-color: rgba(37,99,235,.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.72));
+  color: #0c1426;
+}
+
+.tinyLinks a:hover{
+  border-color: rgba(124,58,237,.22);
+  background:
+    linear-gradient(180deg, rgba(124,58,237,.06), rgba(37,99,235,.04));
+}
+
+/* ---------- Cart drawer ---------- */
+.drawerOverlay{
+  background:
+    radial-gradient(700px 400px at 80% 10%, rgba(124,58,237,.18), transparent 55%),
+    rgba(2,6,23,.46);
+}
+
+.drawerPanel{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,255,255,.90));
+  border-color: rgba(37,99,235,.14);
+  box-shadow:
+    0 22px 60px rgba(15,23,42,.20),
+    0 10px 28px rgba(124,58,237,.10);
+}
+
+.drawerHead{
+  border-bottom-color: rgba(37,99,235,.10);
+}
+
+.drawerClose{
+  border-color: rgba(37,99,235,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.9), rgba(247,250,255,.78));
+  color:#0c1426;
+}
+
+.drawerClose:hover{
+  border-color: rgba(124,58,237,.22);
+  background:
+    linear-gradient(180deg, rgba(124,58,237,.06), rgba(37,99,235,.04));
+}
+
+.cartEmpty{
+  border-color: rgba(124,58,237,.22);
+  color: var(--muted);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.86), rgba(250,247,255,.80));
+}
+
+.cartItem{
+  border-color: rgba(37,99,235,.12);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.78));
+}
+
+.cartItemMeta{
+  color: var(--muted);
+}
+
+.cartItemPrice{
+  color: #1d4ed8;
+}
+
+.qtyBtn,
+.removeBtn{
+  border-color: rgba(37,99,235,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.95), rgba(249,251,255,.88));
+  color:#0c1426;
+}
+
+.qtyBtn:hover,
+.removeBtn:hover{
+  border-color: rgba(124,58,237,.22);
+  background:
+    linear-gradient(180deg, rgba(124,58,237,.06), rgba(37,99,235,.04));
+}
+
+.drawerSummary{
+  border-top-color: rgba(37,99,235,.10);
+}
+
+/* ---------- Toast ---------- */
+.toast{
+  background:
+    linear-gradient(135deg, rgba(15,23,42,.96), rgba(30,41,59,.94));
+  color: #fff;
+  border-color: rgba(124,58,237,.22);
+  box-shadow:
+    0 14px 40px rgba(15,23,42,.24),
+    0 8px 20px rgba(124,58,237,.12);
+}
+
+/* ---------- Accessibility / utility ---------- */
+.skip-link{
+  background:
+    linear-gradient(135deg, #1d4ed8, #7c3aed);
+  color:#fff;
+}
+
 .noticeCard{
-  margin-bottom: var(--s-4);
-  padding: 12px;
-  background: #f8fbff;
-  border: 1px solid #dbeafe;
-  border-radius: var(--r-lg);
+  background:
+    linear-gradient(180deg, rgba(239,246,255,.92), rgba(245,243,255,.88));
+  border-color: rgba(124,58,237,.16);
+  box-shadow: 0 8px 20px rgba(37,99,235,.05);
 }
-
-/* Drawer fine padding moved from inline style */
-.drawerFinePad{ padding: 0 14px 14px; }

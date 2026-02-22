@@ -44,6 +44,22 @@
     }
   }
   </script>
+
+  <style>
+    .skip-link{
+      position:absolute;
+      left:-9999px;
+      top:8px;
+      z-index:9999;
+      background:#0b3d91;
+      color:#fff;
+      padding:10px 12px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:800;
+    }
+    .skip-link:focus{ left:12px; }
+  </style>
 </head>
 
 <body>
@@ -53,7 +69,7 @@
   <div class="bar" role="region" aria-label="Announcement">
     <div class="wrap">
       <div class="inner">
-        <div class="row gap-10">
+        <div class="row" style="gap:10px;">
           <span class="pill">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M12 2l1.4 6.1L20 12l-6.6 3.9L12 22l-1.4-6.1L4 12l6.6-3.9L12 2z" stroke="white" stroke-width="1.6" opacity=".9"/>
@@ -63,7 +79,7 @@
           <span>Get all 3 kits &amp; save — <a href="#bundle">See bundle</a></span>
         </div>
 
-        <a class="pill no-underline" href="#contact">
+        <a class="pill" href="#contact" style="text-decoration:none;">
           Need help ordering? Checkout
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -79,7 +95,7 @@
       <!-- NAV -->
       <nav class="nav" aria-label="Primary">
         <div class="inner">
-          <a class="brand no-underline" href="#main">
+          <a class="brand" href="#main" style="text-decoration:none;">
             <div class="logo" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M12 2l8 4v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4z" stroke="white" stroke-width="1.8"/>
@@ -163,7 +179,7 @@
               <button class="btn secondary" type="button" data-open-cart>View cart</button>
             </div>
 
-            <p class="fine mt-4">
+            <p class="fine" style="margin-top:14px;">
               Safety note: Gates for the <b>top of stairs</b> should be hardware-mounted and installed correctly.
             </p>
           </div>
@@ -212,27 +228,32 @@
         </div>
         <a class="btn secondary" href="#contact">Checkout</a>
       </div>
+
       <!-- BUNDLE -->
       <div class="card bundleCard" id="bundle">
-        <div class="bundleHead">
-          <h3>Bundle &amp; Save <span class="tag">Best value</span></h3>
-          <p class="mini">Perfect for new parents setting up the whole home.</p>
-        </div>
+        <h3 style="margin-bottom:6px;">Bundle &amp; Save <span class="tag">Best value</span></h3>
+        <p class="mini">Perfect for new parents setting up the whole home.</p>
 
-        <div class="bundleGrid">
-          <div class="bundlePane">
+        <div class="grid" style="margin-top:10px;">
+          <div class="card" style="grid-column:span 8; box-shadow:none; background: rgba(255,255,255,.70);">
             <ul class="bullets" aria-label="Bundle benefits">
-              <li><span class="check" aria-hidden="true">✓</span>All 3 kits (Essential + Kitchen/Bathroom + TV/Furniture)</li>
-              <li><span class="check" aria-hidden="true">✓</span>One checkout, one shipment</li>
-              <li><span class="check" aria-hidden="true">✓</span><b>Save vs buying separately</b></li>
+              <li><span class="check" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#0b3d91" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>All 3 kits (Essential + Kitchen/Bathroom + TV/Furniture)</li>
+              <li><span class="check" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#0b3d91" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>One checkout, one shipment</li>
+              <li><span class="check" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#0b3d91" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span><b>Save vs buying separately</b></li>
             </ul>
           </div>
 
-          <div class="bundlePane bundleBuy">
-            <p class="price bundlePrice">R1150</p>
-            <p class="fine bundleSave">Save R85</p>
+          <div class="card" style="grid-column:span 4; box-shadow:none; background: rgba(255,255,255,.70);">
+            <p class="price" style="margin:0;">R1150</p>
+            <p class="fine" style="margin:4px 0 10px;">Save R85</p>
 
-            <div class="bundleActions">
+            <div class="row">
               <button class="btn secondary" type="button"
                 data-add data-id="bundle" data-sku="bundle" data-name="Bundle (All 3 Kits)" data-price="1150">
                 Add to cart
@@ -243,7 +264,7 @@
               </button>
             </div>
 
-            <p class="fine bundleNote">
+            <p class="fine" style="margin:10px 0 0;">
               Add to cart and use checkout to receive your quote by email.
             </p>
           </div>
@@ -251,7 +272,7 @@
       </div>
 
       <!-- KIT CARDS -->
-      <div class="grid mt-4">
+      <div class="grid" style="margin-top: 14px;">
         <!-- KIT 1 -->
         <div class="card" id="kit1">
           <h3>Essential Kit (Kit 1)</h3>
@@ -280,7 +301,7 @@
             </div>
           </div>
 
-          <p class="fine mt-3">Packed locally in Pretoria • DIY install • Great first buy.</p>
+          <p class="fine" style="margin-top:10px;">Packed locally in Pretoria • DIY install • Great first buy.</p>
         </div>
 
         <!-- KIT 2 -->
@@ -311,7 +332,7 @@
             </div>
           </div>
 
-          <p class="fine mt-3">Packed locally in Pretoria • DIY install • Great value.</p>
+          <p class="fine" style="margin-top:10px;">Packed locally in Pretoria • DIY install • Great value.</p>
         </div>
 
         <!-- KIT 3 -->
@@ -342,7 +363,7 @@
             </div>
           </div>
 
-          <p class="fine mt-3">Packed locally in Pretoria • DIY install.</p>
+          <p class="fine" style="margin-top:10px;">Packed locally in Pretoria • DIY install.</p>
         </div>
       </div>
     </section>
@@ -371,7 +392,7 @@
               <button class="btn primary" type="button" data-checkout>Checkout</button>
             </div>
           </div>
-          <p class="fine mt-3">Add to cart and checkout to receive your quote by email.</p>
+          <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
         </div>
 
         <div class="card">
@@ -387,7 +408,7 @@
               <button class="btn primary" type="button" data-checkout>Checkout</button>
             </div>
           </div>
-          <p class="fine mt-3">Add to cart and checkout to receive your quote by email.</p>
+          <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
         </div>
 
         <div class="card">
@@ -403,7 +424,7 @@
               <button class="btn primary" type="button" data-checkout>Checkout</button>
             </div>
           </div>
-          <p class="fine mt-3">Add to cart and checkout to receive your quote by email.</p>
+          <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
         </div>
 
         <div class="card">
@@ -419,7 +440,7 @@
               <button class="btn primary" type="button" data-checkout>Checkout</button>
             </div>
           </div>
-          <p class="fine mt-3">Add to cart and checkout to receive your quote by email.</p>
+          <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
         </div>
       </div>
 
@@ -448,8 +469,8 @@
         </div>
       </div>
 
-      <div class="card pad-6">
-        <h3 class="m0 mb-2">How it works</h3>
+      <div class="card" style="padding:18px;">
+        <h3 style="margin:0 0 8px;">How it works</h3>
 
         <div class="steps" aria-label="Delivery steps">
           <div class="step">
@@ -494,7 +515,7 @@
           </div>
         </div>
 
-        <p class="fine mt-35">
+        <p class="fine" style="margin-top:12px;">
           Shipping cost depends on PUDO size tier. We’ll confirm the correct size based on your order.
         </p>
       </div>
@@ -524,7 +545,7 @@
         </div>
       </div>
 
-      <div class="card mt-4">
+      <div class="card" style="margin-top:14px;">
         <h3>Reviews</h3>
         <p class="fine">Add screenshots of WhatsApp/Facebook feedback here once you have them.</p>
         <p class="fine"><b>Tip:</b> ask every customer for a 1-sentence review + a photo of the kit on the counter.</p>
@@ -581,9 +602,9 @@
       </div>
 
       <form id="contactForm" action="https://formspree.io/f/xkovqpaw" method="POST">
-        <div class="noticeCard mb-4">
-          <p class="m0 fw-900">How checkout works</p>
-          <p class="fine mt-2 mb-0">
+        <div class="card" style="margin-bottom:14px; padding:12px; background:#f8fbff; border:1px solid #dbeafe;">
+          <p style="margin:0; font-weight:800;">How checkout works</p>
+          <p class="fine" style="margin:6px 0 0;">
             1) Add items to cart → 2) Click Checkout → 3) Enter your email and delivery details →
             4) We email your quote and EFT payment details → 5) You pay via EFT and send proof of payment.
           </p>
@@ -622,7 +643,7 @@
         <input type="hidden" name="payment_method" value="EFT" />
         <input type="hidden" name="_subject" value="New Cub Club quote request (EFT)" />
 
-        <div class="row mt-35">
+        <div class="row" style="margin-top:12px;">
           <button class="btn primary" type="submit">Email me my quote (EFT)</button>
 
           <a class="btn secondary" id="emailDirect"
@@ -637,11 +658,11 @@
           </a>
         </div>
 
-        <p class="fine mt-3">
+        <p class="fine" style="margin-top:10px;">
           We only use your details to process your quote and delivery. We don’t sell your data.
         </p>
 
-        <p class="fine mt-2">
+        <p class="fine" style="margin-top:6px;">
           Expect a quote email within business hours. For fastest support, WhatsApp us your area + cart.
         </p>
       </form>
@@ -691,7 +712,7 @@
         <button class="btn secondary" id="clearCartBtn" type="button">Clear cart</button>
       </div>
 
-      <div class="fine drawerFinePad">
+      <div class="fine" style="padding: 0 14px 14px;">
         Checkout inserts your cart into the quote form. Enter your email to receive your quote and pay via EFT.
       </div>
     </div>
@@ -701,6 +722,12 @@
   <div class="toast" id="toast" data-show="false" role="status" aria-live="polite"></div>
 
   <!-- JS -->
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/storage.js" defer></script>
+  <script src="assets/js/dom.js" defer></script>
+  <script src="assets/js/cart.js" defer></script>
+  <script src="assets/js/toast.js" defer></script>
+  <script src="assets/js/wa.js" defer></script>
   <script src="assets/js/app.js" defer></script>
 </body>
 </html>

@@ -39,11 +39,13 @@
         (cartText && cartText !== "Cart is empty." ? `\n${cartText}\n` : "") +
         `\nKit selection: ${kit}\nArea/PUDO: ${area}\nOrder ref: ${ref}\nNotes: ${extra}`;
 
-      const number = CONFIG.WHATSAPP_NUMBER || "YOURNUMBER";
-      wa.href = `https://wa.me/${encode(number)}?text=${encode(text)}`;
+      const rawNumber = CONFIG.WHATSAPP_NUMBER || "YOURNUMBER";
+      const number = String(rawNumber).replace(/[^\d]/g, "");
+      wa.href = `https://wa.me/${number}?text=${encode(text)}`;
     }
 
     [kitSel, pudo, orderref, msg].forEach(el => on(el, "input", updateWA));
+    [kitSel].forEach(el => on(el, "change", updateWA));
     updateWA();
 
     return { updateWA };

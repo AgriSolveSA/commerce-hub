@@ -6,21 +6,128 @@
     window.CUBCLUB_CONFIG || {}
   );
 
-  const { $, $$, on, scrollToId } = window.CubClubDom || {};
-  const {
-    loadCart, addItem, setQty, removeItem, clearCart,
-    getCount, getSubtotal, formatMoney, buildCartSummary
-  } = window.CubClubCart || {};
-  const { showToast } = window.CubClubToast || {};
-  const { applyConfigToContact, initWhatsApp } = window.CubClubWA || {};
+  // --- Hardened helpers: works with modules OR standalone app.js ---
+  const domFallback = {
+    $: (sel, root = document) => root ? root.querySelector(sel) : null,
+    $$: (sel, root = document) => Array.from(root ? root.querySelectorAll(sel) : []),
+    on(el, evt, fn, opts) { if (el) el.addEventListener(evt, fn, opts); },
+    scrollToId(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      catch { el.scrollIntoView(); }
+    }
+  };
+  const { $, $$, on, scrollToId } = Object.assign({}, domFallback, window.CubClubDom || {});
 
-  if (!$ || !$$ || !on) {
-    console.warn("Cub Club: DOM helpers not loaded; scripts may be out of order.");
-    return;
-  }
-  if (!loadCart || !addItem) {
-    console.warn("Cub Club: cart helpers not loaded; check scripts are included.");
-  }
+  const storageFallback = {
+    get(key, fallback) {
+      try { const raw = localStorage.getItem(key); return raw == null ? fallback : JSON.parse(raw); }
+      catch { return fallback; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+      catch { return false; }
+    }
+  };
+
+  const cartFallback = {
+    loadCart() {
+      const c = (window.CubClubStorage || storageFallback).get('cubclub_cart', { items: {} }) || { items: {} };
+      c.items ||= {};
+      return c;
+    },
+    saveCart(cart) { (window.CubClubStorage || storageFallback).set('cubclub_cart', cart); return cart; },
+    addItem(cart, item, qty = 1) {
+      const next = (typeof structuredClone === 'function')
+        ? structuredClone(cart || { items: {} })
+        : JSON.parse(JSON.stringify(cart || { items: {} }));
+      next.items ||= {};
+      const cur = next.items[item.id] || { ...item, qty: 0 };
+      cur.qty = (Number(cur.qty) || 0) + (Number(qty) || 1);
+      next.items[item.id] = cur;
+      return this.saveCart(next);
+    },
+    setQty(cart, id, qty) {
+      const next = (typeof structuredClone === 'function')
+        ? structuredClone(cart || { items: {} })
+        : JSON.parse(JSON.stringify(cart || { items: {} }));
+      next.items ||= {};
+      if (!next.items[id]) return next;
+      const q = Number(qty) || 0;
+      if (q <= 0) delete next.items[id]; else next.items[id].qty = q;
+      return this.saveCart(next);
+    },
+    removeItem(cart, id) { return this.setQty(cart, id, 0); },
+    clearCart() { return this.saveCart({ items: {} }); },
+    getCount(cart) { return Object.values((cart && cart.items) || {}).reduce((a, it) => a + (Number(it.qty) || 0), 0); },
+    getSubtotal(cart) { return Object.values((cart && cart.items) || {}).reduce((a, it) => a + ((Number(it.qty)||0) * (Number(it.price)||0)), 0); },
+    formatMoney(n) { return `R${Math.round(Number(n) || 0)}`; },
+    buildCartSummary(cart) {
+      const items = Object.values((cart && cart.items) || {});
+      if (!items.length) return 'Order summary\n- (empty cart)';
+      const lines = ['Order summary:'];
+      for (const it of items) {
+        const q = Number(it.qty) || 0;
+        const p = Number(it.price) || 0;
+        lines.push(`- ${it.name} x${q} = R${q*p}`);
+      }
+      lines.push(`Subtotal: R${this.getSubtotal(cart)}`);
+      lines.push('Shipping: PUDO (paid by customer)');
+      return lines.join('\n');
+    }
+  };
+  const cartApi = window.CubClubCart || {};
+  const loadCart = cartApi.loadCart || cartFallback.loadCart.bind(cartFallback);
+  const addItem = cartApi.addItem || cartFallback.addItem.bind(cartFallback);
+  const setQty = cartApi.setQty || cartFallback.setQty.bind(cartFallback);
+  const removeItem = cartApi.removeItem || cartFallback.removeItem.bind(cartFallback);
+  const clearCart = cartApi.clearCart || cartFallback.clearCart.bind(cartFallback);
+  const getCount = cartApi.getCount || cartFallback.getCount.bind(cartFallback);
+  const getSubtotal = cartApi.getSubtotal || cartFallback.getSubtotal.bind(cartFallback);
+  const formatMoney = cartApi.formatMoney || cartFallback.formatMoney.bind(cartFallback);
+  const buildCartSummary = cartApi.buildCartSummary || cartFallback.buildCartSummary.bind(cartFallback);
+
+  const toastFallback = {
+    showToast(msg) {
+      const t = document.getElementById('toast');
+      if (!t) { console.log('Toast:', msg); return; }
+      t.textContent = String(msg || 'Done');
+      t.setAttribute('data-show', 'true');
+      clearTimeout(toastFallback._timer);
+      toastFallback._timer = setTimeout(() => t.setAttribute('data-show', 'false'), 1800);
+    }
+  };
+  const { showToast } = Object.assign({}, toastFallback, window.CubClubToast || {});
+
+  const waFallback = {
+    applyConfigToContact() {
+      const emailDirect = document.getElementById('emailDirect');
+      const supportEmail = CONFIG.SUPPORT_EMAIL || CONFIG.support_email;
+      if (emailDirect && supportEmail && !String(supportEmail).includes('YOUR_EMAIL')) {
+        emailDirect.href = `mailto:${supportEmail}?subject=Cub%20Club%20Quote%20Request`;
+      }
+    },
+    initWhatsApp(getCart) {
+      const link = document.getElementById('waLink');
+      const raw = CONFIG.WHATSAPP_NUMBER || CONFIG.whatsapp_number || '';
+      const digits = String(raw).replace(/\D/g, '');
+      function updateWA() {
+        if (!link) return;
+        const cart = typeof getCart === 'function' ? getCart() : { items: {} };
+        const summary = (typeof buildCartSummary === 'function') ? buildCartSummary(cart) : 'Quote request';
+        if (!digits) { link.href = '#'; return; }
+        const text = `Hi Cub Club, I'd like a quote.\n\n${summary}`;
+        link.href = `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
+      }
+      updateWA();
+      return { updateWA };
+    }
+  };
+  const { applyConfigToContact, initWhatsApp } = Object.assign({}, waFallback, window.CubClubWA || {});
+
+  if (!window.CubClubDom) console.warn('Cub Club: DOM helpers not loaded, using internal fallback helpers.');
+  if (!window.CubClubCart) console.warn('Cub Club: cart helpers not loaded, using internal fallback cart logic.');
 
   let cart = loadCart ? loadCart() : { items: {} };
   let waCtl = null;
@@ -151,7 +258,7 @@
       openDrawer();
     });
 
-    $$(".open-cart").forEach((el) => on(el, "click", (e) => {
+    $$("[data-open-cart], .open-cart").forEach((el) => on(el, "click", (e) => {
       e.preventDefault();
       renderCart();
       openDrawer();
@@ -166,7 +273,8 @@
 
     // Delegated actions (inc/dec/remove)
     on(d, "click", (e) => {
-      const btn = e.target.closest("button");
+      const targetEl = (e.target && e.target.nodeType === 1) ? e.target : e.target?.parentElement;
+      const btn = targetEl?.closest ? targetEl.closest("button") : null;
       if (!btn) return;
 
       const act = btn.getAttribute("data-act");
@@ -342,37 +450,61 @@
   }
 
   /* ---------- Checkout helpers ---------- */
-  function bindCheckout() {
-    on($("#checkoutBtn"), "click", () => {
-      const items = cartItemsArray();
-      if (!items.length) {
-        closeDrawer();
-        scrollToId?.("kits");
-        showToast?.("Add something first");
-        return;
-      }
-
-      // Fill message box with cart summary (append if user already typed)
-      const msg = $("#message");
-      if (msg && buildCartSummary) {
-        const summary = buildCartSummary(cart);
-        const existing = msg.value?.trim();
-        if (!existing) msg.value = summary;
-        else if (!existing.includes("Order summary")) msg.value = `${existing}\n\n${summary}`;
-      }
-
-      // Set dropdown to neutral value for cart checkout
-      const kitSel = $("#kit");
-      if (kitSel) kitSel.value = "Other";
-
-      // Sync hidden cart JSON
-      const cartJson = $("#cart_json");
-      if (cartJson) cartJson.value = JSON.stringify(getCartItemsForQuote());
-
+  function moveCartToCheckout() {
+    const items = cartItemsArray();
+    if (!items.length) {
       closeDrawer();
-      scrollToId?.("contact");
-      showToast?.("Cart added to checkout");
-    });
+      scrollToId?.("kits");
+      showToast?.("Add something first");
+      return false;
+    }
+
+    // Fill message box with cart summary (append if user already typed)
+    const msg = $("#message");
+    if (msg && buildCartSummary) {
+      const summary = buildCartSummary(cart);
+      const existing = msg.value?.trim();
+      if (!existing) msg.value = summary;
+      else if (!existing.includes("Order summary")) msg.value = `${existing}\n\n${summary}`;
+    }
+
+    // Set dropdown to neutral value for cart checkout
+    const kitSel = $("#kit");
+    if (kitSel) kitSel.value = "Other";
+
+    // Sync hidden cart JSON
+    const cartJson = $("#cart_json");
+    if (cartJson) cartJson.value = JSON.stringify(getCartItemsForQuote());
+
+    closeDrawer();
+    scrollToId?.("contact");
+    showToast?.("Cart added to checkout");
+    return true;
+  }
+
+  function bindCheckout() {
+    on($("#checkoutBtn"), "click", moveCartToCheckout);
+
+    // Product/card checkout buttons should work too.
+    // If cart is empty, auto-add the product from the same card first, then continue.
+    $$("[data-checkout]").forEach(btn => on(btn, "click", () => {
+      const hasItems = cartItemsArray().length > 0;
+      if (!hasItems) {
+        const card = btn.closest(".card");
+        const addBtn = card?.querySelector?.("[data-add]");
+        if (addBtn?.dataset) {
+          const id = addBtn.dataset.id;
+          const sku = addBtn.dataset.sku || id;
+          const name = addBtn.dataset.name;
+          const price = Number(addBtn.dataset.price);
+          if (id && name && price) {
+            cart = addItem ? addItem(cart, { id, sku, name, price }, 1) : cart;
+            renderCart();
+          }
+        }
+      }
+      moveCartToCheckout();
+    }));
 
     on($("#copyCartBtn"), "click", async () => {
       if (!buildCartSummary) return;
@@ -400,6 +532,10 @@
   }
 
   function init() {
+    if (!window.CubClubCart || !window.CubClubDom || !window.CubClubStorage) {
+      console.warn("Cub Club: helper modules missing; using app.js internal fallbacks where possible.");
+    }
+
     setYear();
     setPaymentLinks();
     applyConfigToContact?.();
@@ -417,5 +553,5 @@
     renderCart();
   }
 
-  document.addEventListener("DOMContentLoaded", init);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
