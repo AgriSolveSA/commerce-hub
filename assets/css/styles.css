@@ -984,3 +984,107 @@ footer{
 @media (prefers-reduced-motion: reduce){
   *{ transition:none !important; scroll-behavior:auto !important; }
 }
+
+/* ============================================================
+   Separation-of-concerns patch (no inline styles)
+   - Skip link moved from HTML into CSS
+   - Bundle layout (grid + mobile stack)
+   - Small utility classes for spacing/layout
+   ============================================================ */
+
+/* Skip link (accessibility) */
+.skip-link{
+  position:absolute;
+  left:-9999px;
+  top:8px;
+  z-index:9999;
+  background: var(--brand);
+  color:#fff;
+  padding:10px 12px;
+  border-radius:999px;
+  text-decoration:none;
+  font-weight:900;
+}
+.skip-link:focus{ left:12px; }
+
+/* Bundle */
+.bundleHead h3{ margin: 0 0 6px; }
+
+.bundleGrid{
+  display:grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.bundlePane{
+  border: 1px solid rgba(15,23,42,.10);
+  border-radius: var(--r-lg);
+  background: rgba(255,255,255,.70);
+  padding: 14px;
+  box-shadow: none;
+}
+
+.bundleBuy{
+  display:grid;
+  gap: 10px;
+  align-content:start;
+}
+
+.bundleActions{
+  display:grid;
+  gap: 10px;
+}
+
+.bundlePrice{ margin: 0; }
+.bundleSave{ margin: 0; }
+.bundleNote{ margin: 0; }
+
+/* Check icon supports both inline SVG and the ✓ character */
+.check{
+  font-weight: 900;
+  color: var(--brand);
+}
+
+/* Mobile: stack bundle panes */
+@media (max-width: 980px){
+  .bundleGrid{ grid-template-columns: 1fr; }
+}
+
+/* Utilities (minimal, predictable) */
+.gap-10{ gap: 10px !important; }
+.no-underline{ text-decoration:none !important; border-bottom: none !important; }
+
+.m0{ margin: 0 !important; }
+.mb-0{ margin-bottom: 0 !important; }
+.fw-900{ font-weight: 900 !important; }
+
+/* Spacing scale used by the HTML cleanup */
+:root{
+  --s-2: 6px;
+  --s-3: 10px;
+  --s-35: 12px;
+  --s-4: 14px;
+}
+
+.mt-2{ margin-top: var(--s-2) !important; }
+.mt-3{ margin-top: var(--s-3) !important; }
+.mt-35{ margin-top: var(--s-35) !important; }
+.mt-4{ margin-top: var(--s-4) !important; }
+
+.mb-4{ margin-bottom: var(--s-4) !important; }
+
+/* Padding helper used for the delivery card */
+.pad-6{ padding: 18px !important; }
+
+/* Notice card styling for the checkout explainer */
+.noticeCard{
+  margin-bottom: var(--s-4);
+  padding: 12px;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+  border-radius: var(--r-lg);
+}
+
+/* Drawer fine padding moved from inline style */
+.drawerFinePad{ padding: 0 14px 14px; }
