@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b3d91" />
+  <title>Cub Club | Baby-Proofing Kits | Order, Pay &amp; PUDO Delivery</title>
+  <meta name="description" content="Cub Club baby-proofing starter kits. Pay online. Delivery via PUDO lockers. Ships within 24–48 business hours. Packed in Pretoria." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cub Club Baby Safety Kits" />
+  <meta property="og:description" content="Simple, affordable baby-proofing kits. Pay online. PUDO delivery. Ships 24–48 business hours." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/images/og_image.png" />
+
+  <!-- Font (optional) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body>
+
+  {{> topbar}}
+
+  {{> header}}
+
+  <main class="wrap">
+    {{> kits}}
+    {{> addons}}
+    {{> delivery}}
+    {{> trust}}
+    {{> faq}}
+    {{> contact}}
+    {{> footer}}
+  </main>
+
+  {{> cart_ui}}
+
+  <!-- Scripts (non-module so this works even when opened via file://) -->
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/modules/storage.js" defer></script>
+  <script src="assets/js/modules/dom.js" defer></script>
+  <script src="assets/js/modules/toast.js" defer></script>
+  <script src="assets/js/modules/cart.js" defer></script>
+  <script src="assets/js/modules/wa.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>

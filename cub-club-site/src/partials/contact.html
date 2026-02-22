@@ -1,0 +1,64 @@
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sectionHead">
+    <div>
+      <h2>Contact &amp; Order Details</h2>
+      <p class="hint">Checkout sends your cart into this form (and into WhatsApp). We reply by email/WhatsApp.</p>
+    </div>
+  </div>
+
+  <form id="contactForm" action="https://formspree.io/f/XXXXYYYY" method="POST">
+    <label for="name">Name</label>
+    <input id="name" name="name" required />
+
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" required />
+
+    <label for="phone">Cell number (required for PUDO SMS)</label>
+    <input id="phone" name="phone" autocomplete="tel" required />
+
+    <label for="pudo">Preferred PUDO locker / area</label>
+    <input id="pudo" name="pudo" placeholder="Mall / Area / Town" required />
+
+    <label for="kit">Kit interested in</label>
+    <select id="kit" name="kit" required>
+      <option value="Essential">Essential Kit (Kit 1)</option>
+      <option value="Kitchen">Kitchen &amp; Bathroom Kit (Kit 2)</option>
+      <option value="TV">TV &amp; Furniture Safety Kit (Kit 3)</option>
+      <option value="Bundle">Bundle (All 3 Kits)</option>
+      <option value="Add-ons">Add-ons only</option>
+      <option value="Other">Other / Cart checkout</option>
+    </select>
+
+    <label for="orderref">Order reference (if you paid already)</label>
+    <input id="orderref" name="orderref" placeholder="Payment reference / order number" />
+
+    <label for="message">Message</label>
+    <textarea id="message" name="message" placeholder="Quantity, suburb/city, add-ons, questions, etc." required></textarea>
+
+    <!-- Cart is injected here so you get the full breakdown in the email -->
+    <input type="hidden" id="cart_json" name="cart_json" value="" />
+
+    <input type="hidden" name="_subject" value="New Cub Club enquiry" />
+
+    <div class="row" style="margin-top:12px;">
+      <button class="btn primary" type="submit">Send message</button>
+
+      <a class="btn secondary" id="emailDirect"
+         href="mailto:YOUR_EMAIL@example.com?subject=Cub%20Club%20Kits%20Enquiry">
+        Email directly
+      </a>
+
+      <a class="btn secondary" id="waLink"
+         href="https://wa.me/YOURNUMBER?text=Hi%20I%20want%20a%20Cub%20Club%20kit.%20My%20area%20is%20____.%20My%20order%20ref%20is%20____."
+         target="_blank" rel="noopener">
+        WhatsApp
+      </a>
+    </div>
+
+    <p class="fine" style="margin-top:10px;">
+      Update your numbers/links once in <b>assets/js/config.js</b>.
+      The page will automatically update the WhatsApp message to include your cart.
+    </p>
+  </form>
+</section>

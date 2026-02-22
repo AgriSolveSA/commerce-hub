@@ -1,0 +1,36 @@
+<!-- CART DRAWER -->
+<div class="drawer" id="cartDrawer" aria-hidden="true" data-open="false">
+  <div class="drawerOverlay" id="cartOverlay" aria-hidden="true"></div>
+
+  <div class="drawerPanel" role="dialog" aria-modal="true" aria-label="Your cart">
+    <div class="drawerHead">
+      <div class="drawerTitle">Your cart</div>
+      <button class="drawerClose" id="cartClose" type="button" aria-label="Close cart">Close</button>
+    </div>
+
+    <div class="drawerBody">
+      <div id="cartItems"></div>
+    </div>
+
+    <div class="drawerSummary">
+      <div class="summaryRow">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">R0</span>
+      </div>
+      <div class="fine">Shipping: PUDO (paid by customer)</div>
+    </div>
+
+    <div class="drawerActions">
+      <button class="btn primary" id="checkoutBtn" type="button">Checkout</button>
+      <button class="btn secondary" id="copyCartBtn" type="button">Copy summary</button>
+      <button class="btn secondary" id="clearCartBtn" type="button">Clear cart</button>
+    </div>
+
+    <div class="fine" style="padding: 0 14px 14px;">
+      Checkout inserts your cart into the contact form + WhatsApp message so you can confirm delivery details.
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" data-show="false" role="status" aria-live="polite"></div>
