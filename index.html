@@ -8,7 +8,6 @@
   <title>Cub Club | Baby-Proofing Kits | Email Quote &amp; Pay by EFT</title>
   <meta name="description" content="Cub Club baby-proofing starter kits. Add to cart, receive a quote by email, and pay via EFT. Delivery via PUDO lockers. Ships within 24–48 business hours. Packed in Pretoria." />
 
-  <!-- Canonical + Social -->
   <link rel="canonical" href="https://cub-club.co.za/" />
   <meta property="og:title" content="Cub Club Baby Safety Kits" />
   <meta property="og:description" content="Simple, affordable baby-proofing kits. Add to cart, receive a quote by email, and pay via EFT." />
@@ -21,18 +20,15 @@
   <meta name="twitter:description" content="Add to cart, receive a quote by email, and pay via EFT. PUDO delivery." />
   <meta name="twitter:image" content="assets/images/og_image.png" />
 
-  <!-- Favicons (add these files when ready) -->
   <link rel="icon" href="assets/images/favicon.png" />
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
 
-  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/styles.css" />
 
-  <!-- Structured data (SEO + trust) -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -50,7 +46,6 @@
   </script>
 
   <style>
-    /* Minimal a11y helper (kept inline so it works even if CSS changes) */
     .skip-link{
       position:absolute;
       left:-9999px;
@@ -71,7 +66,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- TOP BAR -->
-  <div class="bar">
+  <div class="bar" role="region" aria-label="Announcement">
     <div class="wrap">
       <div class="inner">
         <div class="row" style="gap:10px;">
@@ -100,7 +95,7 @@
       <!-- NAV -->
       <nav class="nav" aria-label="Primary">
         <div class="inner">
-          <div class="brand">
+          <a class="brand" href="#main" style="text-decoration:none;">
             <div class="logo" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M12 2l8 4v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4z" stroke="white" stroke-width="1.8"/>
@@ -108,7 +103,7 @@
               </svg>
             </div>
             Cub Club
-          </div>
+          </a>
 
           <div class="links" aria-label="Page sections">
             <a href="#kits">Kits</a>
@@ -121,9 +116,11 @@
 
           <div class="cta">
             <a class="btn secondary" href="#kits">Shop</a>
+
             <button class="btn secondary" id="cartBtn" type="button" aria-haspopup="dialog" aria-controls="cartDrawer">
               Cart <span class="count" id="cartCount">0</span>
             </button>
+
             <a class="btn primary" href="#bundle">Best Deal</a>
           </div>
         </div>
@@ -134,6 +131,7 @@
         <div class="heroGrid">
           <div class="heroCard">
             <h1>Baby-proof fast.<br/>Feel calm at home.</h1>
+
             <p class="sub">
               Cub Club makes practical baby-safety kits with clear contents lists.
               Add to cart, receive your <b>quote by email</b>, then pay via <b>EFT</b>.
@@ -148,6 +146,7 @@
                 </svg>
                 Clear parts list
               </span>
+
               <span class="badge">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M3 7h13l3 5v5h-2" stroke="#0b3d91" stroke-width="1.8" stroke-linecap="round"/>
@@ -157,6 +156,7 @@
                 </svg>
                 PUDO lockers
               </span>
+
               <span class="badge">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M12 8v5l3 2" stroke="#0b3d91" stroke-width="1.8" stroke-linecap="round"/>
@@ -173,8 +173,10 @@
                   <path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </a>
+
               <a class="btn secondary" href="#bundle">Get the bundle</a>
-              <button class="btn secondary open-cart" type="button">View cart</button>
+
+              <button class="btn secondary" type="button" data-open-cart>View cart</button>
             </div>
 
             <p class="fine" style="margin-top:14px;">
@@ -188,9 +190,7 @@
                 Packed in Pretoria
                 <span class="tag">Local</span>
               </div>
-              <p class="miniText">
-                Each kit is checked against a contents list before shipping.
-              </p>
+              <p class="miniText">Each kit is checked against a contents list before shipping.</p>
             </div>
 
             <div class="miniCard">
@@ -198,9 +198,7 @@
                 Simple support
                 <span class="tag">Fast</span>
               </div>
-              <p class="miniText">
-                WhatsApp or email your quote reference — we respond during business hours.
-              </p>
+              <p class="miniText">WhatsApp or email your quote reference — we respond during business hours.</p>
             </div>
 
             <div class="miniCard">
@@ -208,9 +206,7 @@
                 Early-buyer guarantee
                 <span class="tag">Trusted</span>
               </div>
-              <p class="miniText">
-                If something is missing from your kit, we replace missing items quickly.
-              </p>
+              <p class="miniText">If something is missing from your kit, we replace missing items quickly.</p>
             </div>
           </div>
         </div>
@@ -257,15 +253,15 @@
             <p class="price" style="margin:0;">R1150</p>
             <p class="fine" style="margin:4px 0 10px;">Save R85</p>
 
-            <div class="row" style="justify-content:flex-start;">
+            <div class="row">
               <button class="btn secondary" type="button"
                 data-add data-id="bundle" data-sku="bundle" data-name="Bundle (All 3 Kits)" data-price="1150">
                 Add to cart
               </button>
 
-              <a class="btn primary" href="#contact">
+              <button class="btn primary" type="button" data-checkout>
                 Checkout
-              </a>
+              </button>
             </div>
 
             <p class="fine" style="margin:10px 0 0;">
@@ -293,17 +289,18 @@
 
           <div class="priceRow">
             <p class="price">R395</p>
-            <div class="row" style="justify-content:flex-end;">
+            <div class="row">
               <button class="btn secondary" type="button"
                 data-add data-id="kit1" data-sku="kit1" data-name="Essential Kit (Kit 1)" data-price="395">
                 Add to cart
               </button>
 
-              <a class="btn primary" href="#contact">
+              <button class="btn primary" type="button" data-checkout>
                 Checkout
-              </a>
+              </button>
             </div>
           </div>
+
           <p class="fine" style="margin-top:10px;">Packed locally in Pretoria • DIY install • Great first buy.</p>
         </div>
 
@@ -323,17 +320,18 @@
 
           <div class="priceRow">
             <p class="price">R430</p>
-            <div class="row" style="justify-content:flex-end;">
+            <div class="row">
               <button class="btn secondary" type="button"
                 data-add data-id="kit2" data-sku="kit2" data-name="Kitchen & Bathroom Kit (Kit 2)" data-price="430">
                 Add to cart
               </button>
 
-              <a class="btn primary" href="#contact">
+              <button class="btn primary" type="button" data-checkout>
                 Checkout
-              </a>
+              </button>
             </div>
           </div>
+
           <p class="fine" style="margin-top:10px;">Packed locally in Pretoria • DIY install • Great value.</p>
         </div>
 
@@ -353,17 +351,18 @@
 
           <div class="priceRow">
             <p class="price">R410</p>
-            <div class="row" style="justify-content:flex-end;">
+            <div class="row">
               <button class="btn secondary" type="button"
                 data-add data-id="kit3" data-sku="kit3" data-name="TV & Furniture Safety Kit (Kit 3)" data-price="410">
                 Add to cart
               </button>
 
-              <a class="btn primary" href="#contact">
+              <button class="btn primary" type="button" data-checkout>
                 Checkout
-              </a>
+              </button>
             </div>
           </div>
+
           <p class="fine" style="margin-top:10px;">Packed locally in Pretoria • DIY install.</p>
         </div>
       </div>
@@ -385,12 +384,12 @@
           <p class="mini">Add a spare pack for other rooms.</p>
           <div class="priceRow">
             <p class="price">R99</p>
-            <div class="row" style="justify-content:flex-end;">
+            <div class="row">
               <button class="btn secondary" type="button"
                 data-add data-id="addon_plugs" data-sku="addon_plugs" data-name="Add-on: Extra Plug Protectors" data-price="99">
                 Add to cart
               </button>
-              <a class="btn primary" href="#contact">Checkout</a>
+              <button class="btn primary" type="button" data-checkout>Checkout</button>
             </div>
           </div>
           <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
@@ -401,12 +400,12 @@
           <p class="mini">Coffee tables, TV stands, side tables… they multiply.</p>
           <div class="priceRow">
             <p class="price">R149</p>
-            <div class="row" style="justify-content:flex-end;">
+            <div class="row">
               <button class="btn secondary" type="button"
                 data-add data-id="addon_corners" data-sku="addon_corners" data-name="Add-on: Extra Corner Guards" data-price="149">
                 Add to cart
               </button>
-              <a class="btn primary" href="#contact">Checkout</a>
+              <button class="btn primary" type="button" data-checkout>Checkout</button>
             </div>
           </div>
           <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
@@ -417,12 +416,12 @@
           <p class="mini">Great for drawers, fridge/freezer, cupboards.</p>
           <div class="priceRow">
             <p class="price">R79</p>
-            <div class="row" style="justify-content:flex-end;">
+            <div class="row">
               <button class="btn secondary" type="button"
                 data-add data-id="addon_straps" data-sku="addon_straps" data-name="Add-on: Extra Drawer Straps" data-price="79">
                 Add to cart
               </button>
-              <a class="btn primary" href="#contact">Checkout</a>
+              <button class="btn primary" type="button" data-checkout>Checkout</button>
             </div>
           </div>
           <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
@@ -433,12 +432,12 @@
           <p class="mini">Anchor more than one item (TV + cabinet).</p>
           <div class="priceRow">
             <p class="price">R199</p>
-            <div class="row" style="justify-content:flex-end;">
+            <div class="row">
               <button class="btn secondary" type="button"
                 data-add data-id="addon_anchors" data-sku="addon_anchors" data-name="Add-on: Extra Furniture Anchors" data-price="199">
                 Add to cart
               </button>
-              <a class="btn primary" href="#contact">Checkout</a>
+              <button class="btn primary" type="button" data-checkout>Checkout</button>
             </div>
           </div>
           <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
@@ -639,7 +638,6 @@
         <label for="message">Message</label>
         <textarea id="message" name="message" placeholder="Quantity, suburb/city, add-ons, questions, etc." required></textarea>
 
-        <!-- Cart is injected here so you get the full breakdown in the email -->
         <input type="hidden" id="cart_json" name="cart_json" value="" />
         <input type="hidden" name="request_type" value="quote_request" />
         <input type="hidden" name="payment_method" value="EFT" />
@@ -654,7 +652,7 @@
           </a>
 
           <a class="btn secondary" id="waLink"
-             href="https://wa.me/27735176326?text=Hi%20I%20want%20a%20Cub%20Club%20quote.%20My%20area%20is%20____.%20My%20email%20is%20____."
+             href="#"
              target="_blank" rel="noopener">
             WhatsApp
           </a>
@@ -723,33 +721,7 @@
   <!-- TOAST -->
   <div class="toast" id="toast" data-show="false" role="status" aria-live="polite"></div>
 
-  <!-- Scripts (non-module so this works even when opened via file://) -->
-  <script src="assets/js/config.js" defer></script>
-  <script src="assets/js/modules/storage.js" defer></script>
-  <script src="assets/js/modules/dom.js" defer></script>
-  <script src="assets/js/modules/toast.js" defer></script>
-  <script src="assets/js/modules/cart.js" defer></script>
-  <script src="assets/js/modules/wa.js" defer></script>
+  <!-- JS -->
   <script src="assets/js/app.js" defer></script>
-
-  <script>
-    // Footer year
-    (function(){
-      var el = document.getElementById("y");
-      if(el) el.textContent = new Date().getFullYear();
-    })();
-
-    // Make "View cart" button open drawer even if it's not wired in your JS yet
-    (function(){
-      var btns = document.querySelectorAll(".open-cart");
-      btns.forEach(function(b){
-        b.addEventListener("click", function(e){
-          e.preventDefault();
-          var cartBtn = document.getElementById("cartBtn");
-          if(cartBtn) cartBtn.click();
-        });
-      });
-    })();
-  </script>
 </body>
 </html>

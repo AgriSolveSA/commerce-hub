@@ -1,25 +1,31 @@
 /* ============================================================
-   Cub Club — Premium Modern UI
+   Cub Club — Premium Modern UI (WORLD-CLASS MOBILE + POLISH)
    File: assets/css/styles.css
    Goal: high-end, trust, delight, mobile-first conversion
    ============================================================ */
 
+/* -----------------------------
+   Design tokens
+------------------------------ */
 :root{
   --font: Manrope, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 
   --bg: #ffffff;
   --text: #0b1220;
   --muted: #5b6576;
-  --border: rgba(15,23,42,.10);
 
   --brand: #0b3d91;
-  --brand2: #2563eb;
-  --accent: #0ea5e9;
+  --brand2:#2563eb;
+  --accent:#0ea5e9;
+
+  --border: rgba(15,23,42,.10);
+  --border2: rgba(15,23,42,.08);
 
   --card: rgba(255,255,255,.86);
   --shadow: 0 18px 50px rgba(2,6,23,.10);
   --shadow2: 0 10px 30px rgba(2,6,23,.08);
 
+  --r-xl: 26px;
   --r-lg: 22px;
   --r-md: 16px;
   --r-sm: 12px;
@@ -28,35 +34,58 @@
   --max: 1100px;
 
   --ring: 0 0 0 4px rgba(37,99,235,.18);
+
+  /* Sticky header sizing (prevents overlap on mobile) */
+  --bar-h: 44px;
+  --nav-top: var(--bar-h);
+
+  /* Touch */
+  --tap: 44px;
 }
 
-*{ box-sizing: border-box; }
+/* -----------------------------
+   Base
+------------------------------ */
+*{ box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
 body{
   margin:0;
   font-family: var(--font);
+  color: var(--text);
+
+  /* premium soft glow */
   background:
     radial-gradient(900px 500px at 10% -10%, rgba(37,99,235,.12), transparent 55%),
     radial-gradient(900px 500px at 90% -10%, rgba(14,165,233,.10), transparent 55%),
     radial-gradient(1000px 600px at 40% 120%, rgba(11,61,145,.08), transparent 55%),
     var(--bg);
-  color:var(--text);
 }
 
 a{ color: inherit; }
 img{ max-width:100%; display:block; }
 
+/* Better scroll anchor positions under sticky header */
+[id]{ scroll-margin-top: calc(var(--bar-h) + 96px); }
+
 .wrap{ max-width: var(--max); margin: 0 auto; padding: 0 18px; }
 
-/* Top announcement bar */
+/* Subtle selection tint */
+::selection{ background: rgba(37,99,235,.18); }
+
+/* Better tap highlights */
+button, a{ -webkit-tap-highlight-color: transparent; }
+
+/* -----------------------------
+   Top announcement bar (sticky)
+------------------------------ */
 .bar{
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 1000;
   background: linear-gradient(90deg, var(--brand), var(--brand2));
   color: #fff;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,.15);
+  border-bottom: 1px solid rgba(255,255,255,.14);
   box-shadow: 0 10px 30px rgba(2,6,23,.08);
 }
 .bar .inner{
@@ -66,7 +95,9 @@ img{ max-width:100%; display:block; }
   gap: 12px;
   font-weight: 800;
   font-size: 14px;
+  line-height: 1.2;
 }
+.bar .inner > .row{ min-width: 0; } /* allows truncation */
 .bar a{
   color:#fff;
   text-decoration:none;
@@ -79,7 +110,7 @@ img{ max-width:100%; display:block; }
   align-items:center;
   gap: 8px;
   padding: 6px 10px;
-  border: 1px solid rgba(255,255,255,.25);
+  border: 1px solid rgba(255,255,255,.22);
   border-radius: 999px;
   background: rgba(255,255,255,.10);
   font-size: 12px;
@@ -87,16 +118,19 @@ img{ max-width:100%; display:block; }
   white-space: nowrap;
 }
 
-/* Header / Nav */
+/* -----------------------------
+   Header / Nav
+------------------------------ */
 header{
   position: relative;
-  padding: 22px 0 6px;
+  padding: 18px 0 6px;
 }
 
+/* World-class sticky behavior: nav sits under bar via CSS var */
 .nav{
   position: sticky;
-  top: 44px; /* sits under bar */
-  z-index: 40;
+  top: var(--nav-top);
+  z-index: 999;
   margin-top: 14px;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -112,6 +146,7 @@ header{
   gap: 10px;
   padding: 10px 12px;
 }
+
 .brand{
   display:flex;
   align-items:center;
@@ -120,8 +155,10 @@ header{
   letter-spacing: -0.3px;
   white-space: nowrap;
 }
+
 .logo{
-  width: 36px; height: 36px;
+  width: 36px;
+  height: 36px;
   border-radius: 12px;
   background: linear-gradient(135deg, var(--brand), var(--accent));
   display:grid;
@@ -158,22 +195,24 @@ header{
   flex: 0 0 auto;
 }
 
+/* Buttons */
 .btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap: 10px;
   padding: 12px 14px;
+  min-height: var(--tap);
   border-radius: 999px;
   text-decoration:none;
   font-weight: 900;
   border: 1px solid transparent;
   cursor:pointer;
   user-select:none;
-  transition: transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
   white-space: nowrap;
   font-family: var(--font);
   font-size: 14px;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease, filter .15s ease;
 }
 .btn.primary{
   color:#fff;
@@ -189,13 +228,22 @@ header{
   background: linear-gradient(180deg, rgba(255,255,255,.20), transparent 45%);
   pointer-events:none;
 }
-.btn.primary:hover{ transform: translateY(-1px); box-shadow: 0 18px 45px rgba(37,99,235,.25); }
+.btn.primary:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 18px 45px rgba(37,99,235,.25);
+  filter: saturate(1.05);
+}
 .btn.secondary{
   color:#0f172a;
   background: rgba(255,255,255,.75);
   border-color: rgba(15,23,42,.10);
 }
-.btn.secondary:hover{ transform: translateY(-1px); border-color: rgba(37,99,235,.22); box-shadow: 0 12px 28px rgba(2,6,23,.08); }
+.btn.secondary:hover{
+  transform: translateY(-1px);
+  border-color: rgba(37,99,235,.22);
+  box-shadow: 0 12px 28px rgba(2,6,23,.08);
+}
+.btn:active{ transform: translateY(0); }
 .btn:focus{ outline:none; box-shadow: var(--ring); }
 
 /* Cart count */
@@ -212,16 +260,18 @@ header{
   font-weight: 900;
 }
 
-/* Hero */
-.hero{
-  padding: 26px 0 10px;
-}
+/* -----------------------------
+   Hero
+------------------------------ */
+.hero{ padding: 22px 0 10px; }
+
 .heroGrid{
   display:grid;
   grid-template-columns: 1.3fr .9fr;
   gap: 18px;
   align-items: stretch;
 }
+
 .heroCard{
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
@@ -234,6 +284,7 @@ header{
   overflow: hidden;
   border-color: rgba(37,99,235,.18);
 }
+
 .heroCard:before{
   content:"";
   position:absolute;
@@ -244,6 +295,7 @@ header{
   pointer-events:none;
   opacity: .9;
 }
+
 .heroCard::after{
   content:"";
   position:absolute;
@@ -252,17 +304,19 @@ header{
   pointer-events:none;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.65),
-    inset 0 0 0 1px rgba(255,255,255,.25);
+    inset 0 0 0 1px rgba(255,255,255,.22);
   opacity: .9;
 }
+
 .heroCard > *{ position: relative; }
 
 h1{
   margin: 0 0 10px;
   font-size: clamp(30px, 3.6vw, 46px);
   line-height: 1.05;
-  letter-spacing: -0.8px;
+  letter-spacing: -0.9px;
 }
+
 .sub{
   margin: 0 0 14px;
   color: var(--muted);
@@ -270,12 +324,14 @@ h1{
   line-height: 1.6;
   max-width: 60ch;
 }
+
 .badges{
   display:flex;
   flex-wrap:wrap;
   gap: 10px;
   margin: 14px 0 18px;
 }
+
 .badge{
   display:inline-flex;
   align-items:center;
@@ -302,6 +358,7 @@ h1{
   display:grid;
   gap: 12px;
 }
+
 .miniCard{
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
@@ -311,6 +368,7 @@ h1{
   box-shadow: var(--shadow2);
   padding: 18px;
 }
+
 .miniTitle{
   display:flex;
   align-items:center;
@@ -320,22 +378,25 @@ h1{
   letter-spacing:-0.2px;
   margin: 0 0 8px;
 }
+
 .miniText{
   margin: 0;
   color: var(--muted);
   line-height: 1.55;
   font-size: 14px;
 }
+
 .fine{
   font-size: 13px;
   color: var(--muted);
   line-height: 1.55;
 }
 
-/* Sections */
-section{
-  padding: 26px 0;
-}
+/* -----------------------------
+   Sections
+------------------------------ */
+section{ padding: 26px 0; }
+
 .sectionHead{
   display:flex;
   align-items:flex-end;
@@ -343,18 +404,23 @@ section{
   gap: 12px;
   margin-bottom: 12px;
 }
+
 h2{
   margin: 0;
   font-size: 22px;
   letter-spacing: -0.3px;
 }
+
 .hint{
-  margin: 0;
+  margin: 6px 0 0;
   color: var(--muted);
   font-size: 14px;
+  line-height: 1.45;
 }
 
-/* Cards grid */
+/* -----------------------------
+   Cards grid
+------------------------------ */
 .grid{
   display:grid;
   gap: 14px;
@@ -385,6 +451,7 @@ h2{
   font-size: 18px;
   letter-spacing: -0.2px;
 }
+
 .tag{
   display:inline-flex;
   align-items:center;
@@ -408,12 +475,14 @@ h2{
   margin: 10px 0 10px;
   background: rgba(255,255,255,.7);
 }
+
 .mini{
   margin: 0 0 10px;
   color: var(--muted);
   line-height: 1.55;
   font-size: 14px;
 }
+
 .bullets{
   margin: 10px 0 0;
   padding: 0;
@@ -421,6 +490,7 @@ h2{
   display:grid;
   gap: 8px;
 }
+
 .bullets li{
   display:flex;
   gap: 10px;
@@ -429,8 +499,10 @@ h2{
   font-size: 14px;
   line-height: 1.4;
 }
+
 .check{
-  width: 18px; height: 18px;
+  width: 18px;
+  height: 18px;
   border-radius: 6px;
   background: rgba(37,99,235,.10);
   border: 1px solid rgba(37,99,235,.18);
@@ -449,6 +521,7 @@ h2{
   padding-top: 12px;
   border-top: 1px solid rgba(15,23,42,.08);
 }
+
 .price{
   font-weight: 900;
   font-size: 20px;
@@ -466,13 +539,16 @@ h2{
     rgba(255,255,255,.80);
 }
 
-/* How it works / trust rows */
+/* -----------------------------
+   How it works / trust rows
+------------------------------ */
 .triple{
   display:grid;
   gap: 14px;
   grid-template-columns: repeat(12, 1fr);
   margin-top: 12px;
 }
+
 .infoCard{
   grid-column: span 4;
   border: 1px solid var(--border);
@@ -483,14 +559,24 @@ h2{
   box-shadow: var(--shadow2);
   padding: 16px;
 }
-.infoCard h3{ margin:0 0 8px; font-size: 16px; letter-spacing:-0.2px; }
-.infoCard p{ margin:0; color: var(--muted); font-size: 14px; line-height:1.55; }
+.infoCard h3{
+  margin:0 0 8px;
+  font-size: 16px;
+  letter-spacing:-0.2px;
+}
+.infoCard p{
+  margin:0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height:1.55;
+}
 
 .steps{
   display:grid;
   gap: 10px;
   margin: 10px 0 0;
 }
+
 .step{
   display:flex;
   gap: 12px;
@@ -501,7 +587,8 @@ h2{
   background: rgba(255,255,255,.70);
 }
 .stepIcon{
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
   border-radius: 14px;
   background: rgba(37,99,235,.10);
   border: 1px solid rgba(37,99,235,.18);
@@ -511,12 +598,15 @@ h2{
 }
 .step strong{ display:block; margin-bottom: 2px; }
 
-/* FAQ */
+/* -----------------------------
+   FAQ
+------------------------------ */
 .faq{
   display:grid;
   gap: 10px;
   margin-top: 12px;
 }
+
 details{
   border: 1px solid rgba(15,23,42,.10);
   border-radius: var(--r-lg);
@@ -526,6 +616,7 @@ details{
   box-shadow: var(--shadow2);
   padding: 12px 14px;
 }
+
 summary{
   cursor:pointer;
   list-style:none;
@@ -543,9 +634,16 @@ summary:after{
   font-weight: 900;
 }
 details[open] summary:after{ content:"–"; }
-details p{ margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+details p{
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
 
-/* Form */
+/* -----------------------------
+   Form
+------------------------------ */
 form{
   border: 1px solid rgba(15,23,42,.10);
   border-radius: var(--r-lg);
@@ -556,6 +654,7 @@ form{
   padding: 16px;
   margin-top: 12px;
 }
+
 label{
   display:block;
   font-weight: 900;
@@ -563,9 +662,11 @@ label{
   font-size: 13px;
   color:#0f172a;
 }
+
 input, textarea, select{
   width:100%;
   padding: 12px 12px;
+  min-height: var(--tap);
   border-radius: 14px;
   border: 1px solid rgba(15,23,42,.12);
   background: rgba(255,255,255,.90);
@@ -589,12 +690,15 @@ textarea{ min-height: 120px; resize: vertical; }
   align-items:center;
 }
 
-/* Footer */
+/* -----------------------------
+   Footer
+------------------------------ */
 footer{
   padding: 26px 0 40px;
   color: var(--muted);
   font-size: 13px;
 }
+
 .footGrid{
   display:grid;
   grid-template-columns: 1.2fr .8fr;
@@ -602,6 +706,7 @@ footer{
   border-top: 1px solid rgba(15,23,42,.08);
   padding-top: 16px;
 }
+
 .tinyLinks{
   display:flex;
   gap: 10px;
@@ -609,9 +714,13 @@ footer{
   justify-content:flex-end;
   align-items:center;
 }
+
 .tinyLinks a{
   text-decoration:none;
   padding: 6px 10px;
+  min-height: 36px;
+  display:inline-flex;
+  align-items:center;
   border-radius: 999px;
   border: 1px solid rgba(15,23,42,.10);
   background: rgba(255,255,255,.70);
@@ -622,14 +731,13 @@ footer{
   background: rgba(37,99,235,.06);
 }
 
-/* -------------------- */
-/* Cart drawer + toast  */
-/* -------------------- */
-
+/* --------------------
+   Cart drawer + toast
+-------------------- */
 .drawer{
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 1200; /* above sticky header */
   pointer-events: none;
 }
 .drawer[data-open="true"]{ pointer-events: auto; }
@@ -674,11 +782,10 @@ footer{
   padding: 14px 14px 10px;
   border-bottom: 1px solid rgba(15,23,42,.08);
 }
-.drawerTitle{
-  font-weight: 900;
-  letter-spacing: -0.2px;
-}
+.drawerTitle{ font-weight: 900; letter-spacing: -0.2px; }
+
 .drawerClose{
+  min-height: 40px;
   border: 1px solid rgba(15,23,42,.10);
   background: rgba(255,255,255,.7);
   border-radius: 999px;
@@ -696,6 +803,7 @@ footer{
   overflow:auto;
   flex: 1 1 auto;
 }
+
 .cartEmpty{
   padding: 12px;
   border-radius: 16px;
@@ -714,20 +822,9 @@ footer{
   background: rgba(255,255,255,.75);
   margin-bottom: 10px;
 }
-.cartItemName{
-  font-weight: 900;
-  letter-spacing: -0.2px;
-}
-.cartItemMeta{
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 13px;
-}
-.cartItemPrice{
-  font-weight: 900;
-  color: var(--brand);
-  white-space: nowrap;
-}
+.cartItemName{ font-weight: 900; letter-spacing: -0.2px; }
+.cartItemMeta{ margin-top: 2px; color: var(--muted); font-size: 13px; }
+.cartItemPrice{ font-weight: 900; color: var(--brand); white-space: nowrap; }
 
 .qtyRow{
   display:flex;
@@ -736,8 +833,8 @@ footer{
   margin-top: 10px;
 }
 .qtyBtn{
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 12px;
   border: 1px solid rgba(15,23,42,.12);
   background: rgba(255,255,255,.9);
@@ -748,13 +845,11 @@ footer{
   border-color: rgba(37,99,235,.22);
   background: rgba(37,99,235,.06);
 }
-.qtyVal{
-  min-width: 22px;
-  text-align:center;
-  font-weight: 900;
-}
+.qtyVal{ min-width: 22px; text-align:center; font-weight: 900; }
+
 .removeBtn{
   margin-left: 6px;
+  min-height: 36px;
   border: 1px solid rgba(15,23,42,.12);
   background: rgba(255,255,255,.9);
   border-radius: 999px;
@@ -806,7 +901,7 @@ footer{
   opacity: 0;
   transition: opacity .16s ease, transform .16s ease;
   pointer-events:none;
-  z-index: 120;
+  z-index: 1300;
 }
 .toast[data-show="true"]{
   opacity: 1;
@@ -814,17 +909,16 @@ footer{
 }
 
 /* ============================================================
-   Mobile polish (fix sticky overlap + premium spacing)
+   WORLD-CLASS MOBILE POLISH (the part your screenshots needed)
+   - Fix sticky overlap cleanly
+   - Reduce bar height
+   - Remove double-header feeling
+   - Tighten spacing, keep premium look
    ============================================================ */
-@media (max-width: 980px){
-  .bar{ padding: 8px 0; }
-  .bar .inner{ font-size: 12px; }
 
+/* Tablet + down */
+@media (max-width: 980px){
   header{ padding-top: 10px; }
-  .nav{
-    top: 52px;              /* breathing room under bar */
-    border-radius: 18px;    /* less pill, more premium */
-  }
 
   .heroGrid{ grid-template-columns: 1fr; }
   .card{ grid-column: span 12; }
@@ -833,6 +927,57 @@ footer{
   .footGrid{ grid-template-columns: 1fr; }
   .tinyLinks{ justify-content:flex-start; }
   .drawerActions{ grid-template-columns: 1fr; }
+
+  /* Nav feels less “pill”, more premium */
+  .nav{ border-radius: 18px; }
+}
+
+/* Phone */
+@media (max-width: 560px){
+  :root{
+    --bar-h: 44px;
+  }
+
+  /* Make bar compact + prevent multi-line chaos */
+  .bar{ padding: 8px 0; }
+  .bar .inner{ font-size: 12px; gap: 10px; }
+
+  /* Kill the long sentence on mobile; keep CTA clean */
+  .bar .inner > .row span:last-child{ display:none; }
+
+  .bar .pill{
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  /* Make nav tighter and consistent */
+  .nav{ margin-top: 10px; }
+  .nav .inner{ padding: 8px 10px; }
+
+  .logo{
+    width: 32px;
+    height: 32px;
+    border-radius: 12px;
+  }
+
+  .btn{
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .count{
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+  }
+
+  /* Hero spacing */
+  .hero{ padding-top: 14px; }
+  .heroCard{ padding: 18px; }
+  h1{ letter-spacing: -0.7px; }
+
+  /* Section spacing slightly tighter on mobile */
+  section{ padding: 22px 0; }
 }
 
 /* Reduce motion for accessibility */
