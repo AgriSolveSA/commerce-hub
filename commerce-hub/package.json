@@ -1,0 +1,11 @@
+{
+  "name": "commerce-hub",
+  "private": true,
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "deploy": "npm run build && gh-pages -d public"
+  }
+}

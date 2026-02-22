@@ -1,0 +1,15 @@
+name = "commerce-hub-quotes"
+main = "src/index.js"
+compatibility_date = "2026-02-11"
+
+[vars]
+# Default GitHub Pages: https://USERNAME.github.io/REPO
+# Custom domain:       https://yourdomain.com
+STORE_CONFIG_BASE_URL = "https://USERNAME.github.io/REPO"
+
+# For MVP you can use Resend's onboarding sender.
+# For production verify your domain in Resend and use your own sender address.
+EMAIL_FROM = "Commerce Hub <onboarding@resend.dev>"
+
+# Use "*" for MVP; lock down later.
+ALLOWED_ORIGIN = "*"
