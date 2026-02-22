@@ -1,22 +1,15 @@
-// Global (non-module) config so the site works even when opened via file://
-// Edit values below.
 window.CUBCLUB_CONFIG = {
   BRAND_NAME: "Cub Club",
+  WHATSAPP_NUMBER: "+27735176326",
+  SUPPORT_EMAIL: "cub.club.online@gmail.com",
+  FORMSPREE_ENDPOINT: "https://formspree.io/f/xkovqpaw",
 
-  // Replace with your WhatsApp number in international format (South Africa: 27...)
-  WHATSAPP_NUMBER: "YOURNUMBER",
+  QUOTE_API_URL: "https://cubclub-quote-api.cub-club-online.workers.dev/quote",
+  STORE_SLUG: "cubclub",
 
-  // Replace with your support email
-  SUPPORT_EMAIL: "YOUR_EMAIL@example.com",
-
-  // Replace with your Formspree endpoint (https://formspree.io/f/xxxx)
-  FORMSPREE_ENDPOINT: "https://formspree.io/f/XXXXYYYY",
-
-  // Money formatting
   CURRENCY: "ZAR",
   CURRENCY_LOCALE: "en-ZA",
 
-  // Optional: set payment links once here; the buttons pick them up automatically.
   PAYMENT_LINKS: {
     bundle: "https://YOUR-PAYMENT-LINK-BUNDLE",
     kit1: "https://YOUR-PAYMENT-LINK-ESSENTIAL",

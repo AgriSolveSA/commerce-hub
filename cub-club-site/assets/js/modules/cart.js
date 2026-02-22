@@ -52,10 +52,11 @@
     const existing = cart.items[id];
     cart.items[id] = {
       id,
+      sku: item.sku || id,
       name: item.name,
       price: Number(item.price) || 0,
       qty: (existing?.qty || 0) + (Number(qty) || 1),
-    };
+  };
     return saveCart(cart);
   }
 
