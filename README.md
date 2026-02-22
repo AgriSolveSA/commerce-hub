@@ -90,7 +90,7 @@ This avoids needing a full payment gateway/cart backend while still giving you a
 Current images in `assets/images/*.svg` are placeholders.
 Replace them with your real images (keep the filenames the same), e.g.
 
-- `assets/images/essential_kit.svg` → use `essential_kit.png` and update the HTML paths.
+- `assets/images/essential_kit.png` → use `essential_kit.png` and update the HTML paths.
 
 ---
 

@@ -4,24 +4,71 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0b3d91" />
+
   <title>Cub Club | Baby-Proofing Kits | Email Quote &amp; Pay by EFT</title>
   <meta name="description" content="Cub Club baby-proofing starter kits. Add to cart, receive a quote by email, and pay via EFT. Delivery via PUDO lockers. Ships within 24–48 business hours. Packed in Pretoria." />
 
-  <!-- Open Graph -->
+  <!-- Canonical + Social -->
+  <link rel="canonical" href="https://cub-club.co.za/" />
   <meta property="og:title" content="Cub Club Baby Safety Kits" />
   <meta property="og:description" content="Simple, affordable baby-proofing kits. Add to cart, receive a quote by email, and pay via EFT." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="assets/images/og_image.png" />
+  <meta property="og:url" content="https://cub-club.co.za/" />
 
-  <!-- Font (optional) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cub Club Baby Safety Kits" />
+  <meta name="twitter:description" content="Add to cart, receive a quote by email, and pay via EFT. PUDO delivery." />
+  <meta name="twitter:image" content="assets/images/og_image.png" />
+
+  <!-- Favicons (add these files when ready) -->
+  <link rel="icon" href="assets/images/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
+
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <!-- Structured data (SEO + trust) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"Cub Club",
+    "url":"https://cub-club.co.za/",
+    "logo":"https://cub-club.co.za/assets/images/og_image.png",
+    "description":"Baby-proofing kits packed in Pretoria. Add to cart, receive a quote by email, and pay via EFT. Delivery via PUDO lockers.",
+    "address":{
+      "@type":"PostalAddress",
+      "addressLocality":"Pretoria",
+      "addressCountry":"ZA"
+    }
+  }
+  </script>
+
+  <style>
+    /* Minimal a11y helper (kept inline so it works even if CSS changes) */
+    .skip-link{
+      position:absolute;
+      left:-9999px;
+      top:8px;
+      z-index:9999;
+      background:#0b3d91;
+      color:#fff;
+      padding:10px 12px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:800;
+    }
+    .skip-link:focus{ left:12px; }
+  </style>
 </head>
 
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- TOP BAR -->
   <div class="bar">
@@ -38,7 +85,7 @@
         </div>
 
         <a class="pill" href="#contact" style="text-decoration:none;">
-          Need help ordering? Contact
+          Need help ordering? Checkout
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M9 18l6-6-6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -51,7 +98,7 @@
     <div class="wrap">
 
       <!-- NAV -->
-      <div class="nav" role="navigation" aria-label="Primary">
+      <nav class="nav" aria-label="Primary">
         <div class="inner">
           <div class="brand">
             <div class="logo" aria-hidden="true">
@@ -80,7 +127,7 @@
             <a class="btn primary" href="#bundle">Best Deal</a>
           </div>
         </div>
-      </div>
+      </nav>
 
       <!-- HERO -->
       <div class="hero">
@@ -88,9 +135,9 @@
           <div class="heroCard">
             <h1>Baby-proof fast.<br/>Feel calm at home.</h1>
             <p class="sub">
-              Cub Club makes practical, affordable baby-safety kits with clear contents lists.
+              Cub Club makes practical baby-safety kits with clear contents lists.
               Add to cart, receive your <b>quote by email</b>, then pay via <b>EFT</b>.
-              We pack in Pretoria and ship via PUDO lockers in <b>24–48 business hours</b>.
+              Packed in Pretoria. Delivered via PUDO lockers in <b>24–48 business hours</b>.
             </p>
 
             <div class="badges">
@@ -127,7 +174,7 @@
                 </svg>
               </a>
               <a class="btn secondary" href="#bundle">Get the bundle</a>
-              <a class="btn secondary open-cart" href="#cart">View cart</a>
+              <button class="btn secondary open-cart" type="button">View cart</button>
             </div>
 
             <p class="fine" style="margin-top:14px;">
@@ -172,7 +219,7 @@
     </div>
   </header>
 
-  <main class="wrap">
+  <main class="wrap" id="main">
     <!-- KITS -->
     <section id="kits">
       <div class="sectionHead">
@@ -183,7 +230,7 @@
             Shipping is paid by the customer (PUDO locker-to-locker).
           </p>
         </div>
-        <a class="btn secondary" href="#contact">Ask a question</a>
+        <a class="btn secondary" href="#contact">Checkout</a>
       </div>
 
       <!-- BUNDLE -->
@@ -217,7 +264,7 @@
               </button>
 
               <a class="btn primary" href="#contact">
-                Get bundle quote
+                Checkout
               </a>
             </div>
 
@@ -235,7 +282,7 @@
           <h3>Essential Kit (Kit 1)</h3>
           <p class="mini">A starter kit for the most common hazards in living areas.</p>
 
-          <img class="productImg" src="assets/images/essential_kit.svg" alt="Essential Kit" />
+          <img class="productImg" src="assets/images/essential_kit.png" alt="Essential Kit" loading="lazy" />
 
           <ul class="bullets" aria-label="Essential kit contents">
             <li><span class="check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#0b3d91" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Plug protectors (12)</li>
@@ -253,7 +300,7 @@
               </button>
 
               <a class="btn primary" href="#contact">
-                Get quote
+                Checkout
               </a>
             </div>
           </div>
@@ -265,7 +312,7 @@
           <h3>Kitchen &amp; Bathroom Kit (Kit 2) <span class="tag">Most popular</span></h3>
           <p class="mini">For cupboards, drawers, and high-risk rooms.</p>
 
-          <img class="productImg" src="assets/images/kitchen_bathroom_kit.svg" alt="Kitchen & Bathroom Kit" />
+          <img class="productImg" src="assets/images/kitchen_bathroom_kit.png" alt="Kitchen & Bathroom Kit" loading="lazy" />
 
           <ul class="bullets" aria-label="Kitchen and bathroom kit contents">
             <li><span class="check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#0b3d91" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Corner guards (8)</li>
@@ -283,7 +330,7 @@
               </button>
 
               <a class="btn primary" href="#contact">
-                Get quote
+                Checkout
               </a>
             </div>
           </div>
@@ -295,7 +342,7 @@
           <h3>TV &amp; Furniture Safety Kit (Kit 3)</h3>
           <p class="mini">Reduce tip-over risk for TVs and furniture.</p>
 
-          <img class="productImg" src="assets/images/tv_furniture_kit.svg" alt="TV & Furniture Safety Kit" />
+          <img class="productImg" src="assets/images/tv_furniture_kit.png" alt="TV & Furniture Safety Kit" loading="lazy" />
 
           <ul class="bullets" aria-label="TV and furniture kit contents">
             <li><span class="check" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#0b3d91" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Corner guards (4)</li>
@@ -313,7 +360,7 @@
               </button>
 
               <a class="btn primary" href="#contact">
-                Get quote
+                Checkout
               </a>
             </div>
           </div>
@@ -343,7 +390,7 @@
                 data-add data-id="addon_plugs" data-sku="addon_plugs" data-name="Add-on: Extra Plug Protectors" data-price="99">
                 Add to cart
               </button>
-              <a class="btn primary" href="#contact">Get quote</a>
+              <a class="btn primary" href="#contact">Checkout</a>
             </div>
           </div>
           <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
@@ -359,7 +406,7 @@
                 data-add data-id="addon_corners" data-sku="addon_corners" data-name="Add-on: Extra Corner Guards" data-price="149">
                 Add to cart
               </button>
-              <a class="btn primary" href="#contact">Get quote</a>
+              <a class="btn primary" href="#contact">Checkout</a>
             </div>
           </div>
           <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
@@ -375,7 +422,7 @@
                 data-add data-id="addon_straps" data-sku="addon_straps" data-name="Add-on: Extra Drawer Straps" data-price="79">
                 Add to cart
               </button>
-              <a class="btn primary" href="#contact">Get quote</a>
+              <a class="btn primary" href="#contact">Checkout</a>
             </div>
           </div>
           <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
@@ -391,7 +438,7 @@
                 data-add data-id="addon_anchors" data-sku="addon_anchors" data-name="Add-on: Extra Furniture Anchors" data-price="199">
                 Add to cart
               </button>
-              <a class="btn primary" href="#contact">Get quote</a>
+              <a class="btn primary" href="#contact">Checkout</a>
             </div>
           </div>
           <p class="fine" style="margin-top:10px;">Add to cart and checkout to receive your quote by email.</p>
@@ -557,7 +604,7 @@
 
       <form id="contactForm" action="https://formspree.io/f/xkovqpaw" method="POST">
         <div class="card" style="margin-bottom:14px; padding:12px; background:#f8fbff; border:1px solid #dbeafe;">
-          <p style="margin:0; font-weight:700;">How checkout works</p>
+          <p style="margin:0; font-weight:800;">How checkout works</p>
           <p class="fine" style="margin:6px 0 0;">
             1) Add items to cart → 2) Click Checkout → 3) Enter your email and delivery details →
             4) We email your quote and EFT payment details → 5) You pay via EFT and send proof of payment.
@@ -596,7 +643,6 @@
         <input type="hidden" id="cart_json" name="cart_json" value="" />
         <input type="hidden" name="request_type" value="quote_request" />
         <input type="hidden" name="payment_method" value="EFT" />
-
         <input type="hidden" name="_subject" value="New Cub Club quote request (EFT)" />
 
         <div class="row" style="margin-top:12px;">
@@ -615,9 +661,11 @@
         </div>
 
         <p class="fine" style="margin-top:10px;">
-          Update your contact details once in <b>assets/js/config.js</b>.
-          The page will automatically update the WhatsApp message to include your cart.
-          If your quote backend is configured, this form will email a quote and EFT payment details automatically.
+          We only use your details to process your quote and delivery. We don’t sell your data.
+        </p>
+
+        <p class="fine" style="margin-top:6px;">
+          Expect a quote email within business hours. For fastest support, WhatsApp us your area + cart.
         </p>
       </form>
     </section>
@@ -636,7 +684,6 @@
         </div>
       </div>
     </footer>
-
   </main>
 
   <!-- CART DRAWER -->
@@ -684,5 +731,25 @@
   <script src="assets/js/modules/cart.js" defer></script>
   <script src="assets/js/modules/wa.js" defer></script>
   <script src="assets/js/app.js" defer></script>
+
+  <script>
+    // Footer year
+    (function(){
+      var el = document.getElementById("y");
+      if(el) el.textContent = new Date().getFullYear();
+    })();
+
+    // Make "View cart" button open drawer even if it's not wired in your JS yet
+    (function(){
+      var btns = document.querySelectorAll(".open-cart");
+      btns.forEach(function(b){
+        b.addEventListener("click", function(e){
+          e.preventDefault();
+          var cartBtn = document.getElementById("cartBtn");
+          if(cartBtn) cartBtn.click();
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
