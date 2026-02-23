@@ -5,7 +5,7 @@
   "workers_dev": true,
   "vars": {
     "STORE_SLUG": "cubclub",
-    "ALLOWED_ORIGIN": "https://cubclub.online",
+    "ALLOWED_ORIGINS": "https://cub-club.co.za,https://www.cub-club.co.za",
     "QUOTE_TO_EMAIL": "cub.club.online@gmail.com",
     "RESEND_FROM": "Cub Club Quotes <quotes@mail.cubclub.online>",
     "SEND_CUSTOMER_COPY": "true"
